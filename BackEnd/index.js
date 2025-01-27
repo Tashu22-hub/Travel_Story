@@ -14,3 +14,6 @@ app.use(cors({origin: 'w'}));
 app.post('/hello', async (req, res) => {
     return res.json({ message: "Hello" });
 });
+
+app.listen(8000);
+module.exports = app;
