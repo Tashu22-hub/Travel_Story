@@ -11,8 +11,8 @@ app.use(cors({origin: 'w'}));
 
 //Test api
 
-app.post('/hello', async (req, res) => {
-    return res.json({ message: "Hello" });
+app.get('/hello', async (req, res) => {
+    return res.status(200).json({ message: "Hello" });
 });
 
 app.listen(8000);
