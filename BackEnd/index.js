@@ -95,6 +95,18 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Get User Route
+app.get("/get-user", async (req, res) => {
+  try {
+    const accessToken = req.headers.authorization;
+    if (!accessToken) {
+      return res.status(401).json({ error: true, message: "Unauthorized" });
+    }
+  } catch (err) {
+    console.error("Error while fetching user:", err.message);
+    return res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+
 // Start the server
 const PORT = 8000;
 app.listen(PORT, () => {
