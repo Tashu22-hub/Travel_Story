@@ -106,9 +106,10 @@ app.get("/get-user", async (req, res) => {
     console.error("Error while fetching user:", err.message);
     return res.status(500).json({ error: true, message: "Internal Server Error" });
   }
+});
 
 // Start the server
-const PORT = 8000;
+const PORT = 8000;      // Define the port number
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
