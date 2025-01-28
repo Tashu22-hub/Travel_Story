@@ -9,6 +9,8 @@ const jwt = require("jsonwebtoken");
 
 const User = require("./models/user.model");
 
+const { authenticateToken } = require("./utilities");
+
 // Connect to the database
 mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -97,15 +99,15 @@ app.post("/login", async (req, res) => {
 
 // Get User Route
 app.get("/get-user", async (req, res) => {
-  try {
-    const accessToken = req.headers.authorization;
-    if (!accessToken) {
-      return res.status(401).json({ error: true, message: "Unauthorized" });
+   const { userid } = req.query;
+   const isUser = await User.findOne({_id: userid});
+
+    if (!isUser) {
+      return res.status(400).json({ error: true, message: "User does not exist" });
     }
-  } catch (err) {
-    console.error("Error while fetching user:", err.message);
-    return res.status(500).json({ error: true, message: "Internal Server Error" });
-  }
+    return res.json({
+        user: isUser,
+    })
 });
 
 // Start the server
