@@ -76,6 +76,13 @@ app.post("/login", async (req, res) => {
     if (!validPassword) {
       return res.status(400).json({ error: true, message: "Invalid password" });
     }
+
+    const accessToken = jwt.sign(
+        { userId: user._id },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "72h" }
+      );  
+
     return res.status(200).json({
       error: false,
       user: { fullName: user.fullName, email: user.email },
