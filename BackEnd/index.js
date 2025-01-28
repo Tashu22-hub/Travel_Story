@@ -98,7 +98,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Get User Route
-app.get("/get-user", async (req, res) => {
+app.get("/get-user", authenticateToken, async (req, res) => {
    const { userid } = req.query;
    const isUser = await User.findOne({_id: userid});
 
