@@ -1,53 +1,37 @@
 require("dotenv").config(); // Importing the dotenv package
 
-const mongoose = require("mongoose"); // Importing the mongoose package
-const config = require("./config.json"); // Importing the config.json file
-const bcrypt = require("bcrypt"); // Importing the bcrypt package
-const express = require("express"); // Importing the express package
-const cors = require("cors"); // Importing the cors package
-const jwt = require("jsonwebtoken"); // Importing the jsonwebtoken package
+const mongoose = require("mongoose");
+const config = require("./config.json");
+const bcrypt = require("bcrypt");
+const express = require("express");
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
-const User = require("./models/user.model"); // Importing the user model from the models folder
+const User = require("./models/user.model");
 
-// Connect to the database using the connection string from config.json
-mongoose.connect(config.connectionString);
+// Connect to the database
+mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Create an Express app
 const app = express();
-app.use(express.json()); // Middleware for parsing JSON
-app.use(cors({origin: "w"})); // Enable CORS for all origins
-
-//Test api
-/*
-app.get('/hello', async (req, res) => {
-    return res.status(200).json({ message: "Hello" });
-});
-*/
+app.use(express.json());
+app.use(cors({ origin: "*" }));
 
 // Create Account Route
 app.post("/create-account", async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
 
-    // Validate input
     if (!fullName || !email || !password) {
-      return res
-        .status(400) // Bad Request
-        .json({ error: true, message: "All fields are required" });
+      return res.status(400).json({ error: true, message: "All fields are required" });
     }
 
-    // Check if the user already exists
     const isUser = await User.findOne({ email });
     if (isUser) {
-      return res
-        .status(400)
-        .json({ error: true, message: "User already exists" });
+      return res.status(400).json({ error: true, message: "User already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
     const user = new User({
       fullName,
       email,
@@ -56,15 +40,13 @@ app.post("/create-account", async (req, res) => {
 
     await user.save();
 
-    // Generate a JWT access token
     const accessToken = jwt.sign(
       { userId: user._id },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "72h" }
     );
 
-    // Respond with success
-    return res.status(200).json({
+    return res.status(201).json({
       error: false,
       user: { fullName: user.fullName, email: user.email },
       accessToken,
@@ -76,16 +58,40 @@ app.post("/create-account", async (req, res) => {
   }
 });
 
-// Start the server
-app.listen(8000, () => {
-    console.log("Server is running on port 8000");
-  });
-/*
+// Login Route
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: true, message: "All fields are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: true, message: "User does not exist" });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(400).json({ error: true, message: "Invalid password" });
+    }
+    return res.status(200).json({
+      error: false,
+      user: { fullName: user.fullName, email: user.email },
+      accessToken,
+      message: "Login successful",
+    });
+  } catch (err) {
+    console.error("Error during login:", err.message);
+    return res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+});
+
 // Start the server
 const PORT = 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-*/  
 
 module.exports = app;
