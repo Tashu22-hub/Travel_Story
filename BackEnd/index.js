@@ -130,6 +130,13 @@ app.get("/get-user", authenticateToken, async (req, res) => {
   });
 });
 
+//add  Travel Story
+app.get("/add-travel-story", authenticateToken, async (req, res) => {
+
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  
+})
+
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
