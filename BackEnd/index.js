@@ -8,6 +8,7 @@ const cors = require("cors"); // Middleware to enable CORS (Cross-Origin Resourc
 const jwt = require("jsonwebtoken"); // Library for creating and verifying JSON Web Tokens (JWT)
 
 const User = require("./models/user.model"); // Import the User model
+const TravelStory = require("./models/travelStory.model"); // Import the TravelStory model
 const { authenticateToken } = require("./utilities"); // Import the authentication middleware
 
 // Connect to the MongoDB database using the connection string from config.json
@@ -131,11 +132,18 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 });
 
 //add  Travel Story
-app.get("/add-travel-story", authenticateToken, async (req, res) => {
-
-  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+app.post("/add-travel-story", authenticateToken, async (req, res) => {
+  const { title,story,visitedLocations,isFavaourite,userId,Image,visitedDate } = req.body; // Extract user details from the request body
   
-})
+  // Validate that all required fields are provided
+  if (!title || !story || !visitedLocations || !isFavaourite || !userId || !Image || !visitedDate) {
+    return res.status(400).json({ error: true, message: "All fields are required" });
+  }
+  //convert visitedDate from milliseconds to Date object
+  const visitedDateObj = new Date(parseInt(visitedDate));
+
+  // Create a new travel story instance with the provided details
+});
 
 // Start the server and listen on the specified port
 const PORT = 3000;
