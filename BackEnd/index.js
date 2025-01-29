@@ -134,19 +134,20 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 //add  Travel Story
 app.post("/add-travel-story", authenticateToken, async (req, res) => {
   const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
+
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
   
   // Validate that all required fields are provided
   if (!title || !story || !visitedLocations || !ImageUrl || !visitedDate) {
     return res.status(400).json({ error: true, message: "All fields are required" });
   }
   //convert visitedDate from milliseconds to Date object
-  const visitedDateObj = new Date(parseInt(visitedDate));
+  const parsedVisitedDate = new Date(parseInt(visitedDate));
   try {
     const travelStory = new TravelStory({
       title,
       story,
       visitedLocations,
-      isFavaourite,
       userId,
       ImageUrl,
       visitedDate: parsedVisitedDate,

@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;//importing the schema from mongoose
 
 const travelStorySchema = new Schema({
     title: { type: String, required: true },
-    content: { type: String, required: true },
+    story: { type: String, required: true },
     visitedLocations: { type: [String], default: [] },
     isFavaourite: { type: Boolean, default: false },
     userId: { type: Schema.Types.ObjectId, ref: "User",required: true },
     createdOn: { type: Date, default: Date.now },
-    Image: { type: String, required: true },
+    ImageUrl: { type: String, required: true },
     visitedDate: { type: Date, required: true },
 
 });
