@@ -133,18 +133,31 @@ app.get("/get-user", authenticateToken, async (req, res) => {
 
 //add  Travel Story
 app.post("/add-travel-story", authenticateToken, async (req, res) => {
-  const { title,story,visitedLocations,isFavaourite,userId,Image,visitedDate } = req.body; // Extract user details from the request body
+  const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
   
   // Validate that all required fields are provided
-  if (!title || !story || !visitedLocations || !isFavaourite || !userId || !Image || !visitedDate) {
+  if (!title || !story || !visitedLocations || !ImageUrl || !visitedDate) {
     return res.status(400).json({ error: true, message: "All fields are required" });
   }
   //convert visitedDate from milliseconds to Date object
   const visitedDateObj = new Date(parseInt(visitedDate));
-
+  try {
+    const travelStory = new TravelStory({
+      title,
+      story,
+      visitedLocations,
+      isFavaourite,
+      userId,
+      ImageUrl,
+      visitedDate: parsedVisitedDate,
+    });
+    await travelStory.save();
+    res.status(201).json({ story: travelStory, message: "Travel story added successfully" });
+  } catch (error) {
+    res.status(400).json({ error: true, message:error.message });
+  }
   // Create a new travel story instance with the provided details
 });
-
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
