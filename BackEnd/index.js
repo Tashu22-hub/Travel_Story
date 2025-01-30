@@ -176,7 +176,7 @@ app.get("/get-all-travel-stories", authenticateToken, async (req, res) => {
   }
 });
 
-//Router to handle image upload
+//Router to handle image upload you must instral multer command in terminal
 
 app.post("/image-upload", upload.single("image"), async (req, res) => {
   try {
@@ -191,7 +191,9 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
     res.status(400).json({ error: true, message: error.message });
   }
 });
-  
+
+
+
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
