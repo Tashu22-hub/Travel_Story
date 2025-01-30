@@ -135,46 +135,7 @@ app.get("/get-user", authenticateToken, async (req, res) => {
   });
 });
 
-//add  Travel Story
-app.post("/add-travel-story", authenticateToken, async (req, res) => {
-  const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
 
-  const { userId } = req.user; // Extract userId from the authenticated user's token payload
-  
-  // Validate that all required fields are provided
-  if (!title || !story || !visitedLocations || !ImageUrl || !visitedDate) {
-    return res.status(400).json({ error: true, message: "All fields are required" });
-  }
-  //convert visitedDate from milliseconds to Date object
-  const parsedVisitedDate = new Date(parseInt(visitedDate));
-  try {
-    const travelStory = new TravelStory({
-      title,
-      story,
-      visitedLocations,
-      userId,
-      ImageUrl,
-      visitedDate: parsedVisitedDate,
-    });
-    await travelStory.save();
-    res.status(201).json({ story: travelStory, message: "Travel story added successfully" });
-  } catch (error) {
-    res.status(400).json({ error: true, message:error.message });
-  }
-  // Create a new travel story instance with the provided details
-});
-
-//Get all travel stories
-
-app.get("/get-all-travel-stories", authenticateToken, async (req, res) => {
-  const { userId } = req.user; // Extract userId from the authenticated user's token payload
-  try {
-    const travelStories = await TravelStory.find({ userId: userId }).sort({ isFavourite: -1 });
-    res.status(200).json({ travelStories, message: "Travel stories fetched successfully" });
-  } catch (error) {
-    res.status(400).json({ error: true, message: error.message });
-  }
-});
 
 //Router to handle image upload you must instral multer command in terminal
 
@@ -220,6 +181,81 @@ app.delete("/delete-image", async (req, res) => {
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 
+//add  Travel Story
+app.post("/add-travel-story", authenticateToken, async (req, res) => {
+  const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
+
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  
+  // Validate that all required fields are provided
+  if (!title || !story || !visitedLocations || !ImageUrl || !visitedDate) {
+    return res.status(400).json({ error: true, message: "All fields are required" });
+  }
+  //convert visitedDate from milliseconds to Date object
+  const parsedVisitedDate = new Date(parseInt(visitedDate));
+  try {
+    const travelStory = new TravelStory({
+      title,
+      story,
+      visitedLocations,
+      userId,
+      ImageUrl,
+      visitedDate: parsedVisitedDate,
+    });
+    await travelStory.save();
+    res.status(201).json({ story: travelStory, message: "Travel story added successfully" });
+  } catch (error) {
+    res.status(400).json({ error: true, message:error.message });
+  }
+  // Create a new travel story instance with the provided details
+});
+
+//Get all travel stories
+
+app.get("/get-all-travel-stories", authenticateToken, async (req, res) => {
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  try {
+    const travelStories = await TravelStory.find({ userId: userId }).sort({ isFavourite: -1 });
+    res.status(200).json({ travelStories, message: "Travel stories fetched successfully" });
+  } catch (error) {
+    res.status(400).json({ error: true, message: error.message });
+  }
+});
+
+//edit Travel Story
+app.post("/edit-travel-story", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  
+  // Validate that all required fields are provided
+  if (!title || !story || !visitedLocations || !ImageUrl || !visitedDate) {
+    return res.status(400).json({ error: true, message: "All fields are required" });
+  }
+  //convert visitedDate from milliseconds to Date object
+  const parsedVisitedDate = new Date(parseInt(visitedDate));
+  try {
+    // Find the travel story by id and userId and ensure it belongs to the authenticated user
+    const travelStory = new TravelStory.findOne({ _id: id, userId: userId });
+    
+    if (!travelStory) {
+      return res.status(404).json({ error: true, message: "Travel story not found" });
+    }
+    const placeholderImageUrl = "http://localhost:3000/assets/logo.png";
+
+    travelStory.title = title;
+    travelStory.story = story;
+    travelStory.visitedLocations = visitedLocations;
+    travelStory.ImageUrl = ImageUrl || placeholderImageUrl;
+    travelStory.visitedDate = parsedVisitedDate;
+
+    await travelStory.save();
+    res.status(201).json({ story: travelStory, message: "Travel story added successfully" });
+  } catch (error) {
+    res.status(400).json({ error: true, message:error.message });
+  }
+  // Create a new travel story instance with the provided details
+}
 
 
 // Start the server and listen on the specified port
