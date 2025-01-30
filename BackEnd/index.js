@@ -223,7 +223,7 @@ app.get("/get-all-travel-stories", authenticateToken, async (req, res) => {
 });
 
 //edit Travel Story
-app.post("/edit-travel-story", authenticateToken, async (req, res) => {
+app.post("/edit-travel-story/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
@@ -236,7 +236,7 @@ app.post("/edit-travel-story", authenticateToken, async (req, res) => {
   const parsedVisitedDate = new Date(parseInt(visitedDate));
   try {
     // Find the travel story by id and userId and ensure it belongs to the authenticated user
-    const travelStory = new TravelStory.findOne({ _id: id, userId: userId });
+    const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
     
     if (!travelStory) {
       return res.status(404).json({ error: true, message: "Travel story not found" });
