@@ -255,7 +255,7 @@ app.post("/edit-travel-story", authenticateToken, async (req, res) => {
     res.status(400).json({ error: true, message:error.message });
   }
   // Create a new travel story instance with the provided details
-}
+});
 
 
 // Start the server and listen on the specified port
