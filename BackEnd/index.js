@@ -191,8 +191,18 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
     res.status(400).json({ error: true, message: error.message });
   }
 });
+//Delete an  image from uploads directory
+app.delete("/delete-image", async (req, res) => {
+    const { imageUrl } = req.body;
 
+    if (!imageUrl) {
+      return res.status(400).json({ error: true, message: "Image URL is required" });
+    }
+})
+//server static files from the uploads and assets directory
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 // Start the server and listen on the specified port
 const PORT = 3000;
