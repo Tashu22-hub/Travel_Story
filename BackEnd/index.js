@@ -7,6 +7,10 @@ const express = require("express"); // Web framework for Node.js
 const cors = require("cors"); // Middleware to enable CORS (Cross-Origin Resource Sharing)
 const jwt = require("jsonwebtoken"); // Library for creating and verifying JSON Web Tokens (JWT)
 
+const upload = require("./multer"); // Import the multer instance
+const fs = require("fs"); // File system module to interact with the file system
+const path = require("path"); // Module to work with file paths
+
 const User = require("./models/user.model"); // Import the User model
 const TravelStory = require("./models/travelStory.model"); // Import the TravelStory model
 const { authenticateToken } = require("./utilities"); // Import the authentication middleware
@@ -159,6 +163,35 @@ app.post("/add-travel-story", authenticateToken, async (req, res) => {
   }
   // Create a new travel story instance with the provided details
 });
+
+//Get all travel stories
+
+app.get("/get-all-travel-stories", authenticateToken, async (req, res) => {
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  try {
+    const travelStories = await TravelStory.find({ userId: userId }).sort({ isFavourite: -1 });
+    res.status(200).json({ travelStories, message: "Travel stories fetched successfully" });
+  } catch (error) {
+    res.status(400).json({ error: true, message: error.message });
+  }
+});
+
+//Router to handle image upload
+
+app.post("/image-upload", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: true, message: "No file uploaded" });
+    } 
+    const image = req.file;
+    const imageUrl = `http://localhost:3000/uploads/${image.filename}`;
+
+    res.status(201).json({ imageUrl, message: "Image uploaded successfully" });
+  } catch (error) {
+    res.status(400).json({ error: true, message: error.message });
+  }
+});
+  
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
