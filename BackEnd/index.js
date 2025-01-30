@@ -191,18 +191,36 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
     res.status(400).json({ error: true, message: error.message });
   }
 });
+
 //Delete an  image from uploads directory
 app.delete("/delete-image", async (req, res) => {
-    const { imageUrl } = req.body;
-
-    if (!imageUrl) {
-      return res.status(400).json({ error: true, message: "Image URL is required" });
+  const { imageUrl } = req.query;
+  if (!imageUrl) {
+    return res.status(400).json({ error: true, message: "ImageUrl parameter is required" });
+  }
+  try {
+    // Extract the filename from the imageUrl
+    const filename = path.basename(imageUrl);
+     // Define the file path
+    const filePath = path.join(__dirname, "uploads", filename);
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      res.status(200).json({ message: "Image deleted successfully" });
+    } else {
+      res.status(404).json({ error: true, message: "Image not found" });
     }
-})
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
+
 //server static files from the uploads and assets directory
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
+
+
 
 // Start the server and listen on the specified port
 const PORT = 3000;
