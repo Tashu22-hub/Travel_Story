@@ -250,7 +250,7 @@ app.put("/edit-travel-story/:id", authenticateToken, async (req, res) => {
     travelStory.visitedDate = parsedVisitedDate;
 
     await travelStory.save();
-    res.status(201).json({ story: travelStory, message: "Travel story added successfully" });
+    res.status(201).json({ story: travelStory, message: "Travel story updated successfully" });
   } catch (error) {
     res.status(400).json({ error: true, message:error.message });
   }
