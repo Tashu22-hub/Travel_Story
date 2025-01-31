@@ -339,17 +339,19 @@ app.get("/search-travel-stories", authenticateToken, async (req, res) => {
 
 //filter travel stories by visited date
 app.get("/filter-travel-stories", authenticateToken, async (req, res) => {
+  const { startDate, endDate } = req.query; // Extract the startDate and endDate from the request query parameters
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
   const { visitedDate } = req.query; // Extract the visitedDate from the request query parameters
+
   try {
     //Convert startDate and endDate to Date objects
-    const startDate = new Date(parseInt(visitedDate));
-    const endDate = new Date(parseInt(visitedDate));
+    const start = new Date(parseInt(startDate));
+    const end = new Date(parseInt(endDate));
 
     //find travel stories that belong to the authenticated user and have visitedDate between startDate and endDate
     const filteredResults = await TravelStory.find({
       userId: userId,
-      visitedDate: { $gte: startDate, $lte: endDate },
+      visitedDate: { $gte: start, $lte: end },
     }).sort({ isFavourite: -1 });
 
     res.status(200).json({ filteredResults, message: "Filtered results fetched successfully" });
