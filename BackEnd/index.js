@@ -257,8 +257,40 @@ app.post("/edit-travel-story/:id", authenticateToken, async (req, res) => {
   // Create a new travel story instance with the provided details
 });
 
+//delete Travel Story
+app.delete("/delete-travel-story/:id", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  try {
+    // Find the travel story by id and userId and ensure it belongs to the authenticated user
+    const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
+    if (!travelStory) {
+      return res.status(404).json({ error: true, message: "Travel story not found" });
+    }
+    // Delete the travel story from the database
+    await travelStory.remove();
+    res.status(200).json({ message: "Travel story deleted successfully" });
 
-// Start the server and listen on the specified port
+    // Extract the filename from the imageUrl
+    const ImageUrl = travelStory.ImageUrl;
+    const filename = path.basename(travelStory.ImageUrl);
+    // Define the file path
+    const filePath = path.join(__dirname, "uploads", filename);
+    
+    //delete the image from the uploads folder/directory
+    fs.unlinkSync(filePath, (err) => {
+      if (err) {
+        console.error("Failed to delete image:", err);
+        //optionally you could still respond with asuceess status here
+        // if you don't want to treat this as acritical error
+      }
+    });
+    res.status(200).json({ message: "Travel story deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
+  // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
