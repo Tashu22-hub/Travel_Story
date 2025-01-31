@@ -337,6 +337,14 @@ app.get("/search-travel-stories", authenticateToken, async (req, res) => {
   }
 });
 
+//filter travel stories by visited date
+app.get("/filter-travel-stories", authenticateToken, async (req, res) => {
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  const { visitedDate } = req.query; // Extract the visitedDate from the request query parameters
+
+  if (!visitedDate) {
+    
+  }
 
 
 
