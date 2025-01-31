@@ -292,6 +292,24 @@ app.delete("/delete-travel-story/:id", authenticateToken, async (req, res) => {
   }
 });
 
+//update isFavourite status of a travel story
+app.put("/update-favourite/:id", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { isFavourite } = req.body; // Extract isFavourite status from the request body
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  try {
+    // Find the travel story by id and userId and ensure it belongs to the authenticated user
+    const travelStory = await TravelStory.findOne({ _id: id, userId: userId });
+    if (!travelStory) {
+      return res.status(404).json({ error: true, message: "Travel story not found" });
+    }
+    travelStory.isFavourite = isFavourite;
+    await travelStory.save();
+    res.status(200).json({ message: "Favourite status updated successfully" });
+  }catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
 
   // Start the server and listen on the specified port
 const PORT = 3000;
