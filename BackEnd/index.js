@@ -337,6 +337,9 @@ app.get("/search-travel-stories", authenticateToken, async (req, res) => {
   }
 });
 
+
+
+
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
