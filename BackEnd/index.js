@@ -223,7 +223,7 @@ app.get("/get-all-travel-stories", authenticateToken, async (req, res) => {
 });
 
 //edit Travel Story
-app.post("/edit-travel-story/:id", authenticateToken, async (req, res) => {
+app.put("/edit-travel-story/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { title,story,visitedLocations,ImageUrl,visitedDate } = req.body; // Extract user details from the request body
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
