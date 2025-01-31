@@ -250,7 +250,7 @@ app.put("/edit-travel-story/:id", authenticateToken, async (req, res) => {
     travelStory.visitedDate = parsedVisitedDate;
 
     await travelStory.save();
-    res.status(201).json({ story: travelStory, message: "Travel story added successfully" });
+    res.status(201).json({ story: travelStory, message: "Travel story updated successfully" });
   } catch (error) {
     res.status(400).json({ error: true, message:error.message });
   }
@@ -268,7 +268,8 @@ app.delete("/delete-travel-story/:id", authenticateToken, async (req, res) => {
       return res.status(404).json({ error: true, message: "Travel story not found" });
     }
     // Delete the travel story from the database
-    await travelStory.remove();
+    await travelStory.deleteOne();//remove() method is no longer supported in Mongoose v6 and above. In newer versions of Mongoose, 
+    // you should use deleteOne() or deleteMany() instead of remove().
     res.status(200).json({ message: "Travel story deleted successfully" });
 
     // Extract the filename from the imageUrl
@@ -290,6 +291,8 @@ app.delete("/delete-travel-story/:id", authenticateToken, async (req, res) => {
     res.status(500).json({ error: true, message: error.message });
   }
 });
+
+
   // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
