@@ -294,7 +294,7 @@ app.delete("/delete-travel-story/:id", authenticateToken, async (req, res) => {
 
 //update isFavourite status of a travel story
 app.put("/update-favourite/:id", authenticateToken, async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params;// Extract id from the request parameters
   const { isFavourite } = req.body; // Extract isFavourite status from the request body
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
   try {
@@ -311,7 +311,33 @@ app.put("/update-favourite/:id", authenticateToken, async (req, res) => {
   }
 });
 
-  // Start the server and listen on the specified port
+//Search travel stories
+app.get("/search-travel-stories", authenticateToken, async (req, res) => {
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+  const { query } = req.query; // Extract the search query from the request query parameters
+
+  if (!query) {
+    return res.status(400).json({ error: true, message: "Search query is required" });
+  } 
+
+  try {
+    // Find travel stories that match the search query and belong to the authenticated user
+    const searchResults = await TravelStory.find({
+      userId: userId,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { story: { $regex: query, $options: "i" } },
+        { visitedLocations: { $regex: query, $options: "i" } },
+      ],
+    }).sort({ isFavourite: -1 });
+
+    res.status(200).json({ searchResults, message: "Search results fetched successfully" });
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
+
+// Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
