@@ -191,8 +191,10 @@ app.post("/add-travel-story", authenticateToken, async (req, res) => {
   if (!title || !story || !visitedLocations || !ImageUrl || !visitedDate) {
     return res.status(400).json({ error: true, message: "All fields are required" });
   }
+ 
   //convert visitedDate from milliseconds to Date object
   const parsedVisitedDate = new Date(parseInt(visitedDate));
+  
   try {
     const travelStory = new TravelStory({
       title,
@@ -337,29 +339,33 @@ app.get("/search-travel-stories", authenticateToken, async (req, res) => {
   }
 });
 
-//filter travel stories by visited date
+// Filter travel stories by visited date
 app.get("/filter-travel-stories", authenticateToken, async (req, res) => {
-  const { startDate, endDate } = req.query; // Extract the startDate and endDate from the request query parameters
+  const { startDate, endDate } = req.query; // Extract startDate and endDate from query parameters
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
 
   try {
-    //Convert startDate and endDate to Date objects
+    // Convert startDate and endDate from milliseconds to Date objects
     const start = new Date(parseInt(startDate));
     const end = new Date(parseInt(endDate));
 
-    //find travel stories that belong to the authenticated user and have visitedDate between startDate and endDate
+    // Log the dates for debugging purposes
+    console.log("Start Date:", start);
+    console.log("End Date:", end);
+
+    // Find travel stories that belong to the authenticated user and have visitedDate between startDate and endDate
     const filteredResults = await TravelStory.find({
-      userId: userId,
-      visitedDate: { $gte: start, $lte: end },
-    }).sort({ isFavourite: -1 });
+      userId: userId, // Ensure the story belongs to the authenticated user
+      visitedDate: { $gte: start, $lte: end }, // Filter by visitedDate range
+    }).sort({ isFavourite: -1 }); // Sort by isFavourite in descending order
 
-    res.status(200).json({ filteredResults, message: "Filtered results fetched successfully" });
-    } catch (error) {
-      res.status(500).json({ error: true, message: error.message });
-    }
-  });
-
-
+    // Return the filtered results
+    res.status(200).json({ stories: filteredResults, message: "Travel stories filtered successfully" });
+  } catch (error) {
+    console.error("Error filtering travel stories:", error.message);
+    res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+});
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
