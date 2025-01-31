@@ -341,7 +341,6 @@ app.get("/search-travel-stories", authenticateToken, async (req, res) => {
 app.get("/filter-travel-stories", authenticateToken, async (req, res) => {
   const { startDate, endDate } = req.query; // Extract the startDate and endDate from the request query parameters
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
-  const { visitedDate } = req.query; // Extract the visitedDate from the request query parameters
 
   try {
     //Convert startDate and endDate to Date objects
