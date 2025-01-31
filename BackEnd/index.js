@@ -345,9 +345,24 @@ app.get("/filter-travel-stories", authenticateToken, async (req, res) => {
   const { userId } = req.user; // Extract userId from the authenticated user's token payload
 
   try {
+    // Validate that startDate and endDate are provided and are valid numbers
+    if (!startDate || !endDate || isNaN(startDate) || isNaN(endDate)) {
+      return res.status(400).json({ error: true, message: "Invalid startDate or endDate" });
+    }
+
     // Convert startDate and endDate from milliseconds to Date objects
     const start = new Date(parseInt(startDate));
     const end = new Date(parseInt(endDate));
+
+    // Validate that the dates are valid
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json({ error: true, message: "Invalid startDate or endDate" });
+    }
+
+    // Ensure startDate is before endDate
+    if (start > end) {
+      return res.status(400).json({ error: true, message: "startDate must be before endDate" });
+    }
 
     // Log the dates for debugging purposes
     console.log("Start Date:", start);
