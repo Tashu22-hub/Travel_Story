@@ -337,6 +337,29 @@ app.get("/search-travel-stories", authenticateToken, async (req, res) => {
   }
 });
 
+//filter travel stories by visited date
+app.get("/filter-travel-stories", authenticateToken, async (req, res) => {
+  const { startDate, endDate } = req.query; // Extract the startDate and endDate from the request query parameters
+  const { userId } = req.user; // Extract userId from the authenticated user's token payload
+
+  try {
+    //Convert startDate and endDate to Date objects
+    const start = new Date(parseInt(startDate));
+    const end = new Date(parseInt(endDate));
+
+    //find travel stories that belong to the authenticated user and have visitedDate between startDate and endDate
+    const filteredResults = await TravelStory.find({
+      userId: userId,
+      visitedDate: { $gte: start, $lte: end },
+    }).sort({ isFavourite: -1 });
+
+    res.status(200).json({ filteredResults, message: "Filtered results fetched successfully" });
+    } catch (error) {
+      res.status(500).json({ error: true, message: error.message });
+    }
+  });
+
+
 // Start the server and listen on the specified port
 const PORT = 3000;
 app.listen(PORT, () => {
