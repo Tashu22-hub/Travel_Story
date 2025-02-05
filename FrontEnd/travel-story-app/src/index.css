@@ -12,3 +12,10 @@
     overflow-x: hidden;
   }
 }
+
+@layer components {
+  .bg-login-bg-img {
+    background-image: url('src/assets/A beautiful tropical.jpg'); /* Update with your image path */
+  }
+}
+
