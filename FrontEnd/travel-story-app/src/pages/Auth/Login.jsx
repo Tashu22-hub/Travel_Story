@@ -17,7 +17,7 @@ const Login = () => {
         <div className="w-2/4 h-[90vh] flex items-end bg-login-bg-img bg-cover bg-center rounded-lg shadow-lg p-10 z-50 relative">
           <div className="absolute top-10 left-10 text-white">
             <h4 className='text-4xl font-bold mb-4'>Capture Your <br />Journeys</h4>
-            <p className='text-lg'>
+            <p className='text-[15px] text-white leading-6 pr-6 mt-4'>
             <br/>
               Record your travel experiences and memories in your personal travel journal. Share your travel stories with the world.
             </p>
