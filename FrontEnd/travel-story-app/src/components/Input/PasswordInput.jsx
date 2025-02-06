@@ -2,7 +2,7 @@ import React from 'react';
 
 const PasswordInput = ({ value, onChange, placeholder }) => {
   return (
-    <div className='flex items-center rounded-md-3'>
+    <div className='flex items-center '>
       <input 
         type="password" // Set the input type to password
         value={value}
