@@ -14,6 +14,7 @@ const Login = () => {
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
       <div className="login-ui-box right-10 -top-40" />
+      <div className="login-ui-box"/>
       <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2"/>
       <div className="container h-screen flex justify-center items-center px-20 mx-auto">
         {/* Left Side: Background Image and Text */}
