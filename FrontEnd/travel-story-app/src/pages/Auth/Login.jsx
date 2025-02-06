@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from '../../components/Input/PasswordInput';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,25 +35,20 @@ const Login = () => {
               placeholder="Email"
               className='w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500'
             /><br />
-
-            <input
-              type="password"
-              placeholder="Password"
-              className='w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500'
-            /><br />
-
+            <PasswordInput /><br />
+            <br />
             <button
               type="submit"
-              className='w-full bg-cyan-500 text-white py-2 rounded-md hover:bg-cyan-600 transition duration-300'
+              className='btn-primary'
             >
               Login
             </button>
 
-            <p className="text-center my-4">Or</p>
+            <p className="text sm text-gray-500 text-center my-4">Or</p>
 
             <button
               type="button"
-              className='w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition duration-300'
+              className='btn-light btn-primary '
               onClick={() => navigate('/signup')}
             >
               CREATE ACCOUNT
@@ -61,7 +57,8 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
+
 
 export default Login;
