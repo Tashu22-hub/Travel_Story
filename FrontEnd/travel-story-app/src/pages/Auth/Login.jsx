@@ -1,14 +1,32 @@
-import React from "react";
+import React,{ useState} from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
+import { validateEmail } from "../../utils/helper";
+
 
 const Login = () => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log("Form submitted");
+
+    if (!validateEmail("email", email)) {
+      setError("please enter a valid email");
+      return;
+    }
+
+    if (!password){
+      setError("please enter a password");
+      return;
+    }
+
+    setError("");
+
+    //LoginAPI Call
+    
   };
 
   return (
@@ -34,17 +52,26 @@ const Login = () => {
 
         {/* Right Side: Login Form */}
         <div className="w-2/4 p-10 bg-white rounded-lg shadow-lg z-50">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleLogin}>
             <h4 className="text-2xl font-semibold mb-7">Login</h4>
 
             <input
               type="text"
               placeholder="Email"
+              value={email}
+              onChange={({target}) => { 
+                setEmail(target.value);
+              }}
               className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
             <br />
-            <PasswordInput />
-            <br />
+            <PasswordInput 
+              value={password}
+              onChange={({ target }) => {
+                setPassword(target.value)
+              }}
+            />
+            {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
             <br />
             <button type="submit" className="btn-primary">
               Login
@@ -63,7 +90,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default Login;
