@@ -1,36 +1,37 @@
-import React,{ useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 
 const Login = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail("email", email)) {
-      setError("please enter a valid email");
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email");
       return;
     }
 
-    if (!password){
-      setError("please enter a password");
+    if (!password) {
+      setError("Please enter a password");
       return;
     }
 
     setError("");
+    setLoading(true);
 
-    //LoginAPI Call
-
+    // Login API Call
     try {
       const response = await axiosInstance.post("/login", {
-        email,
-        password,
+        email: email,
+        password: password,
       });
       // Handle success login response
       if (response.data && response.data.accessToken) {
@@ -39,25 +40,25 @@ const Login = () => {
       }
     } catch (error) {
       // Handle error
-      if(
+      if (
         error.response &&
         error.response.data &&
         error.response.data.message
-      ) { 
+      ) {
         setError(error.response.data.message);
       } else {
         setError("Something went wrong. Please try again later.");
       }
-      
+    } finally {
+      setLoading(false);
     }
-
   };
 
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
       <div className="login-ui-box right-10 -top-40" />
-      <div className="login-ui-box"/>
-      <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2"/>
+      <div className="login-ui-box" />
+      <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2" />
       <div className="container h-screen flex justify-center items-center px-20 mx-auto">
         {/* Left Side: Background Image and Text */}
         <div className="w-2/4 h-[90vh] flex items-end bg-login-bg-img bg-cover bg-center rounded-lg shadow-lg p-10 z-50 relative">
@@ -79,33 +80,37 @@ const Login = () => {
           <form onSubmit={handleLogin}>
             <h4 className="text-2xl font-semibold mb-7">Login</h4>
 
+            <label htmlFor="email" className="sr-only">
+              Email
+            </label>
             <input
-              type="text"
+              id="email"
+              type="email"
               placeholder="Email"
               value={email}
-              onChange={({target}) => { 
+              onChange={({ target }) => {
                 setEmail(target.value);
               }}
               className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
             <br />
-            <PasswordInput 
+            <PasswordInput
               value={password}
               onChange={({ target }) => {
-                setPassword(target.value)
+                setPassword(target.value);
               }}
             />
             {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
             <br />
-            <button type="submit" className="btn-primary">
-              Login
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
             </button>
 
             <p className="text sm text-gray-500 text-center my-4">Or</p>
 
             <button
               type="button"
-              className="btn-light btn-primary "
+              className="btn-light btn-primary"
               onClick={() => navigate("/signup")}
             >
               CREATE ACCOUNT
@@ -115,6 +120,6 @@ const Login = () => {
       </div>
     </div>
   )
-};
+}
 
 export default Login;
