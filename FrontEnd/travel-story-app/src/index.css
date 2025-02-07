@@ -17,7 +17,7 @@ body {
   background-image: url('src/assets/A beautiful tropical.jpg'); /* Update with your image path */
 }
 .bg-Signup-bg-img {
-  background-image: url('src/assets/A beautiful tropical.jpg'); /* Update with your image path */
+  background-image: url('src/assets/A stunning tropical.png'); /* Update with your image path */
 }
 @layer components {
   .input-box {
