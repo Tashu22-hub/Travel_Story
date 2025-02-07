@@ -16,7 +16,9 @@ body {
 .bg-login-bg-img {
   background-image: url('src/assets/A beautiful tropical.jpg'); /* Update with your image path */
 }
-
+.bg-Signup-bg-img {
+  background-image: url('src/assets/A beautiful tropical.jpg'); /* Update with your image path */
+}
 @layer components {
   .input-box {
     @apply w-full text-sm bg-cyan-500 rounded px-5 py-3 mb-4 outline-none;

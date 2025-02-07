@@ -3,36 +3,31 @@ import React from 'react';
 
 import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
-import SignUp from './pages/Auth/SignUp'; 
-
+import SignUp from './pages/Auth/SignUp';
 
 const App = () => {
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Root />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-      
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </div>
-  )
-}
-
-//define the root commponent to handle the redirect
-const root = () => {
-  //Check if token exists in local storage
-  const token = localStorage.getItem("token");
-
-  //redirect to dashboard if authenticated otherwise redirect to login
-  return isAuthenticted ? (
-  <Navigate to="/dashboard" /> 
-  ): (
-    <Navigate to="/login" />
   );
 };
+
+// Define the Root component to handle the redirect
+const Root = () => {
+  // Check if token exists in local storage
+  const token = localStorage.getItem('token');
+
+  // Redirect to dashboard if authenticated, otherwise to login
+  return token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
+};
+
 export default App;
