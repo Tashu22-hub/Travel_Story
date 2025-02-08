@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TravelStoryCard = () => {
+const TravelStoryCard = ({}) => {
   return (
     <div>TravelStoryCard</div>
   )

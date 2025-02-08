@@ -40,6 +40,15 @@ const Home = () => {
     }
   };
 
+  // Handle edit story Click
+  const handleEdit = (data) => {}
+
+  // Handle Travel Story Click
+  const handleViewStory = (data) => {}
+
+  //handle update favorite
+  const updateFavorite = async (storyData) => {}
+
   useEffect(() => {
     getAllTravelStories();
     getUserInfo();
@@ -47,7 +56,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar userInfo={userInfo} />
+      <Navbar userInfo={userInfo} /> //*Add the userInfo prop to the Navbar component
 
       <div className='container mx-auto px-10'>
         <div className='flex gap-7'>
@@ -57,7 +66,19 @@ const Home = () => {
             ) : allstories?.length > 0 ? (
               <div className='grid grid-cols-2 gap-4'>
                 {allstories.map((item) => (
-                  <TravelStoryCard key={item.id} />
+                  <TravelStoryCard 
+                  key={item.id}
+                  ImgUrl={item.ImgUrl}
+                  title={item.title}
+                  story={item.story}
+                  date={item.visitedLoaction}
+                  visitedLocations={item.visitedLocations}
+                  isFavorite={item.isFavorite}
+                  onEdit={() => handleEdit(item)}
+                  onClick={() => handleViewStory(item)}
+                  onIsFavorite={() => handleIsFavorite(item)}
+                  />
+            
                 ))}
               </div>
             ) : (
