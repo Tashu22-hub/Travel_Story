@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import TravelStoryCard from '../../components/Cards/TravelStoryCard';
 
+import { ToastContainer, toast } from 'react-toastify';// Import toastify module
 const Home = () => {
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
@@ -64,6 +65,8 @@ const Home = () => {
                     story._id === storyData._id ? { ...story, isFavourite: !story.isFavourite } : story
                 );
                 setAllStories(updatedStories);
+                toast.success("story updated successfully.");// Show success message
+                getAllTravelStories();
             }
         } catch (error) {
             console.error("Error updating favorite status:", error);
@@ -112,6 +115,7 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer /> {/* Toast container */}
         </>
     );
 };

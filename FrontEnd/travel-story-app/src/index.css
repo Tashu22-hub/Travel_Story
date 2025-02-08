@@ -35,6 +35,10 @@ body {
   .login-ui-box {
     @apply w-80 h-[450px] rounded-full bg-[#05B6D3] absolute rotate-45;
   }
+
+  .icon-btn {
+    @apply text-[20px] text-slate-300 cursor-pointer hover:text-red-500;
+  }
   
 }
 
