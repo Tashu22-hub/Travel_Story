@@ -17,7 +17,7 @@ const ProfileInfo = ({userInfo,onLogout}) => {
         </div>       
     </div>
     )
-  )
-}
+  );
+};
 
 export default ProfileInfo
