@@ -8,6 +8,9 @@ const AddEditTravelStory = ({
     getAllTravelStories,
 
 }) => {
+    const handleAddOrUpdateClick = () => {
+        getAllTravelStories();
+    }
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -16,9 +19,21 @@ const AddEditTravelStory = ({
         </h5>
         <div>
           <div className="flex items-center gap-3 bg-cyan-50/50 p-2 rounded-l-lg">
-            <button className="btn-small" onClick={() => {}}>
-              {/*+*/}<MdAdd className="text-lg"/>ADD STORY
-            </button>
+            {type === "edit" ? (
+              <button className="btn-small" onClick={handleAddOrUpdateClick}>
+              <MdAdd className="text-lg"/>ADD STORY
+            </button> 
+            ):(
+            <>
+              <button className="btn-small" onClick={handleAddOrUpdateClick}>
+                <MdUpdate className="text-lg"/>UPDATE STORY
+              </button>
+
+              <button className="btn-small btn-delete" onClick={onClose}>
+                <MdDeleteOutline className="text-lg"/>DELETE
+              </button>
+            </>
+            )}
 
             <button 
              className="" 
