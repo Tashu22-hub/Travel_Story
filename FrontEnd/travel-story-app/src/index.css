@@ -59,13 +59,25 @@ body {
   .model-box {
     @apply w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg shadow-lg mx-auto mt-14 p-5 overflow-y-scroll z-50;
   }
-  
+  .icon-btn {
+    @apply text-[22px] text-slate-300 cursor-pointer hover:text-red-500;
+  }
+  .icon-label {
+    @apply text-xs text-slate-400; 
+  }
+  .btn-small{
+    @apply flex items-center gap-1 text-sm font-medium bg-cyan-50 text-current shadow-cyan-100/0 border border-cyan-100 hover:bg-current hover:text-white rounded px-3 py-[3px];
+  }
+  .btn-delete{
+    @apply bg-rose-50 text-rose-500 shadow-rose-100/0 border border-rose-500 hover:bg-rose-500 hover:text-white;
+  }
   
 }
 
 /* Define your primary text color */
 .text-current {
   color: #05B6D3;
+  
 }
 
 .bg-current {
