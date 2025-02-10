@@ -45,7 +45,7 @@ body {
   }
   
   .btn-light {
-    @apply bg-cyan-50 text-current shadow-cyan-100/0 border border-cyan-100 hover:bg-current hover:text-white;
+    @apply bg-cyan-50 text-sky-600 shadow-cyan-100/0 border border-cyan-100 hover:bg-cyan-500 hover:text-white;
   }
   
   .login-ui-box {
@@ -66,7 +66,7 @@ body {
     @apply text-xs text-slate-400; 
   }
   .btn-small{
-    @apply flex items-center gap-1 text-sm font-medium bg-cyan-50 text-current shadow-cyan-100/0 border border-cyan-100 hover:bg-current hover:text-white rounded px-3 py-[3px];
+    @apply  flex items-center gap-1 text-xs font-medium bg-cyan-50 text-sky-600 shadow-cyan-100/0 border border-cyan-100 hover:bg-cyan-500 hover:text-white rounded px-3 py-[3px];
   }
   .btn-delete{
     @apply bg-rose-50 text-rose-500 shadow-rose-100/0 border border-rose-500 hover:bg-rose-500 hover:text-white;
