@@ -3,6 +3,7 @@ import { MdAdd, MdDeleteOutline, MdUpdate, MdClose } from 'react-icons/md';
 import DataSelector from '../../components/Input/DataSelector';
 import { GrTarget } from 'react-icons/gr';
 import ImageSelector from '../../components/Input/ImageSelector';
+import TagInput from '../../components/Input/TagInput';
 
 // AddEditTravelStory component allows users to add or update a travel story
 const AddEditTravelStory = ({
@@ -22,7 +23,10 @@ const AddEditTravelStory = ({
     const handleAddOrUpdateClick = () => {
         getAllTravelStories(); // Fetch all stories after adding/updating
     };
-
+    //Delete story image and update the story
+    const handleDeleteStoryImg = () => {
+        setStoryImg(null);
+    };
     return (
         <div>
             {/* Header section with title and action buttons */}
@@ -81,6 +85,7 @@ const AddEditTravelStory = ({
                     <ImageSelector
                         Image={storyImg}
                         setImage={setStoryImg}
+                        handleDeleteImg={handleDeleteStoryImg}
                     />
 
                     {/* Textarea for the story content */}
@@ -94,8 +99,13 @@ const AddEditTravelStory = ({
                             onChange={({ target }) => setStory(target.value)}
                         />
                     </div>
-                </div>
+
+                    <div className="pt-3">
+                      <label className="input-label">VISITED LOCATIONS</label>
+                      <TagInput tags={visitedLocations} setTags={setVisitedLocations} />
+                    </div>
             </div>
+          </div>
         </div>
     );
 };
