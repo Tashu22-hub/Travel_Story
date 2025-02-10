@@ -1,7 +1,9 @@
 import React ,{ useState } from 'react';
 import { MdAdd,MdDeleteOutline,MdUpdate,MdClose } from 'react-icons/md'
 import DataSelector from '../../components/Input/DataSelector'
+import { GrTarget } from 'react-icons/gr';
 
+import ImageSelector from '../../components/Input/ImageSelector'
 const AddEditTravelStory = ({
     storyInfo,
     type,
@@ -9,7 +11,13 @@ const AddEditTravelStory = ({
     getAllTravelStories,
 
 }) => {
-    const [visitedDate, setVisitedDate] = useState(new Date());
+
+    const [title, setTitle] = useState('');
+    const [storyImg, setStoryImg] = useState(null);
+    const [story, setStory] = useState('');
+    const [visitedLocations, setVisitedLocations] = useState([]);
+    const [visitedDate, setVisitedDate] = useState(null);
+
     const handleAddOrUpdateClick = () => {
         getAllTravelStories();
     }
@@ -58,10 +66,29 @@ const AddEditTravelStory = ({
         <input 
           type='text' 
           className='text-2xl text-slate-950 outline-none' 
-          placeholder='A day at the Great Wall' />
+          placeholder='A day at the Great Wall'
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          />
           
         <div className='my-3'>
           <DataSelector date={visitedDate} setDate ={setVisitedDate}/>
+        </div>
+
+        <ImageSelector
+          ImageUrl={storyImg}
+          setImageUrl={setStoryImg}/>
+
+        <div className='flex flex-col gap-2 mt-4'>
+          <label className='input-label'>STORY</label>
+          <textarea 
+            text="text"
+            className='text-sm text-slate-950 outline-none bg-state-50 p-2 rounded' 
+            placeholder='Write your story here...'
+            rows={10}
+            value={story}
+            onChange={({ target }) => setStory(target.value)}
+            />
         </div>
       </div>
       </div>
