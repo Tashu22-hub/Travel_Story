@@ -1,4 +1,4 @@
-import React from 'react'
+import React ,{ useState } from 'react';
 import { MdAdd,MdDeleteOutline,MdUpdate,MdClose } from 'react-icons/md'
 import DataSelector from '../../components/Input/DataSelector'
 
@@ -9,6 +9,7 @@ const AddEditTravelStory = ({
     getAllTravelStories,
 
 }) => {
+    const [visitedDate, setVisitedDate] = useState(new Date());
     const handleAddOrUpdateClick = () => {
         getAllTravelStories();
     }
@@ -60,7 +61,7 @@ const AddEditTravelStory = ({
           placeholder='A day at the Great Wall' />
           
         <div className='my-3'>
-          <DataSelector />
+          <DataSelector date={visitedDate} setDate ={setVisitedDate}/>
         </div>
       </div>
       </div>
