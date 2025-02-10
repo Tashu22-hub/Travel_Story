@@ -3,7 +3,7 @@ import { FaRegFileImage } from "react-icons/fa";
 import { MdDelete, MdDeleteOutline } from "react-icons/md";
 
 // ImageSelector component allows users to select and preview an image file.
-const ImageSelector = ({ Image, setImage,handleDeleteImage}) => {
+const ImageSelector = ({ Image, setImage, handleDeleteImage }) => {
   const inputRef = useRef(null); // Ref to access the file input element
   const [PreviewUrl, setPreviewUrl] = useState(null); // State to store the preview URL of the selected image
 
@@ -70,13 +70,17 @@ const ImageSelector = ({ Image, setImage,handleDeleteImage}) => {
       ) : (
         // Display the selected image preview
         <div className="w-full relative">
-          <img src={PreviewUrl} alt="Selected" className="w-full h-[220px] object-cover rounded-lg"/>
+          <img
+            src={PreviewUrl}
+            alt="Selected"
+            className="w-full h-[220px] object-cover rounded-lg"
+          />
           <button
             className="btn-small btn-delete absolute top-2 right-2"
             onClick={handleRemoveImage} // Clear the selected image
           >
-          <MdDeleteOutline className="text-lg" />
-          </button>  
+            <MdDeleteOutline className="text-lg" />
+          </button>
         </div>
       )}
     </div>
