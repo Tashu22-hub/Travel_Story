@@ -54,6 +54,20 @@ const TagInput = ({ tags, setTags }) => {
       {/* Display the current tags as a JSON string for debugging/demo purposes */}
       {JSON.stringify(tags)}
       
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {tags.map((tag, index) => (
+            <span key={index} className="">
+              <GrMapLocation className="text-sm" /> {tag} {/* Location icon */}
+              
+              <button onClick={() => handleRemoveTag(tag)}>  
+                <MdClose/> {/* Close icon */}
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      
       {/* Container for the input field and add button */}
       <div className="flex items-center gap-2">
         {/* Input field for typing tags */}
