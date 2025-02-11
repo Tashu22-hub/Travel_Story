@@ -4,6 +4,8 @@ import DataSelector from "../../components/Input/DataSelector";
 import { GrTarget } from "react-icons/gr";
 import ImageSelector from "../../components/Input/ImageSelector";
 import TagInput from "../../components/Input/TagInput";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 // AddEditTravelStory component allows users to add or update a travel story
 const AddEditTravelStory = ({
@@ -13,20 +15,87 @@ const AddEditTravelStory = ({
   getAllTravelStories, // Function to fetch all travel stories after adding/updating
 }) => {
   // State variables for the form fields
-  const [title, setTitle] = useState("");
-  const [storyImg, setStoryImg] = useState(null); // State for the story image
-  const [story, setStory] = useState("");
-  const [visitedLocations, setVisitedLocations] = useState([]);
-  const [visitedDate, setVisitedDate] = useState(null);
+  const [title, setTitle] = useState(storyInfo?.title || "");
+  const [storyImg, setStoryImg] = useState(storyInfo?.storyImg || null); // State for the story image
+  const [story, setStory] = useState(storyInfo?.story || "");
+  const [visitedLocations, setVisitedLocations] = useState(storyInfo?.visitedLocations || []);
+  const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null);
+
+  const [error, setError] = useState(""); // Error message state
+
+  // Add new Travel Story
+  const addNewTravelStory = async () => {
+    try {
+      let imagUrl = "";
+
+      //Upload image if present
+      if (storyImg) {
+        const ImagUploadRes = await uploadImage(storyImg);
+        //get the image URL
+        imagUrl = ImagUploadRes.ImageUrl || "";
+      }
+
+      const response = await axiosInstance.post("/add-travel-story", {
+        title,
+        story,
+        ImgUrl: imagUrl,
+        visitedLocations,
+        visitedDate: visitedDate
+            ? moment(visitedDate).valueOf()
+            : moment().valueOf(),
+      });
+
+      if (response.data && response.data.story) {
+        toast.success("Story added successfully");
+        //refresh stories
+        getAllTravelStories();
+        //close model pr from
+        onClose();
+      }
+    } catch (error) {
+      
+    }
+  };
+
+  // Update Travel Story
+  const updateTravelStory = async () => {
+    // Implementation for updating a travel story
+    console.log("Updating travel story");
+    // After updating, call getAllTravelStories to refresh the list
+    getAllTravelStories();
+  };
 
   // Handles the add or update action
   const handleAddOrUpdateClick = () => {
-    getAllTravelStories(); // Fetch all stories after adding/updating
+    console.log("Input Data:", {
+      title,
+      storyImg,
+      story,
+      visitedLocations,
+      visitedDate,
+    });
+    if (!title) {
+      setError("Please enter a title for the story");
+      return;
+    }
+    if (!storyImg) {
+      setError("Please select an image for the story");
+      return;
+    }
+    setError("");
+
+    if (type === "add") {
+      addNewTravelStory();
+    } else {
+      updateTravelStory();
+    }
   };
-  //Delete story image and update the story
+
+  // Delete story image and update the story
   const handleDeleteStoryImg = () => {
     setStoryImg(null);
   };
+
   return (
     <div>
       {/* Header section with title and action buttons */}
@@ -58,10 +127,13 @@ const AddEditTravelStory = ({
             )}
 
             {/* Close button to exit the form */}
-            <button onClick={onClose}>
+            <button className="" onClick={onClose}>
               <MdClose className="text-xl text-slate-400" />
             </button>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm mt-2">{error}</p> // Display error message if any
+          )}
         </div>
       </div>
 
