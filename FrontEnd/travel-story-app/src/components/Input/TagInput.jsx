@@ -48,16 +48,19 @@ const TagInput = ({ tags, setTags }) => {
       addNewTag(); // Add the tag when "Enter" is pressed
     }
   };
+  const handleRemoveTag = (tagToRemove) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove)); // Remove the tag from the tags array
+  }
 
   return (
     <div>
       {/* Display the current tags as a JSON string for debugging/demo purposes */}
-      {JSON.stringify(tags)}
+      {/*{JSON.stringify(tags)}*/}
       
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex item-center flex-wrap gap-2 mt-2">
           {tags.map((tag, index) => (
-            <span key={index} className="">
+            <span key={index} className="flex item-center gap-2 text-sm text-cyan-600 bg-cyan-100 px-3 py-1 rounded">
               <GrMapLocation className="text-sm" /> {tag} {/* Location icon */}
               
               <button onClick={() => handleRemoveTag(tag)}>  
@@ -67,7 +70,7 @@ const TagInput = ({ tags, setTags }) => {
           ))}
         </div>
       )}
-      
+
       {/* Container for the input field and add button */}
       <div className="flex items-center gap-2">
         {/* Input field for typing tags */}
