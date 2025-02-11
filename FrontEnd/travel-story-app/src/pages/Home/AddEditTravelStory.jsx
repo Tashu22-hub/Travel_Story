@@ -4,6 +4,10 @@ import DataSelector from "../../components/Input/DataSelector";
 import { GrTarget } from "react-icons/gr";
 import ImageSelector from "../../components/Input/ImageSelector";
 import TagInput from "../../components/Input/TagInput";
+import uploadImage  from "../../utils/uploadImage";
+import axiosInstance from "../../utils/axiosInstance";
+import { toast } from "react-toastify";
+import moment from "moment";
 
 // AddEditTravelStory component allows users to add or update a travel story
 const AddEditTravelStory = ({
@@ -19,9 +23,60 @@ const AddEditTravelStory = ({
   const [visitedLocations, setVisitedLocations] = useState([]);
   const [visitedDate, setVisitedDate] = useState(null);
 
+  const [error, setError] = useState(""); // Error message state
+
+  //add new Travel Story
+  const addNewTravelStory = async () => {
+    try {
+      let imageUrl = "";
+      // Check if an image file is selected
+      if (storyImg) {
+        // Upload the image file and get the URL
+        const imgUploadRes = await uploadImage(storyImg);
+        // Set the image URL for the story
+        imageUrl = imgUploadRes.imageUrl || "";
+      }
+      const response = await axiosInstance.post("add-travel-story", {
+        title,
+        story,
+        ImageUrl: imageUrl || "",
+        visitedLocations,
+        visitedDate:visitedDate
+          ?moment(visitedDate).valueOf()
+          :moment().valueOf(),
+      });
+
+      if (response.data && response.data.success) {
+        toast.success("Story added successfully");
+        getAllTravelStories(); // Fetch all travel stories
+        onClose(); // Close the form
+      }
+    } catch (error) {
+      console.error("Error adding story:", error);
+    }
+
+
+  };
+  //update Travel Story
+  const updateTravelStory = async () => {};
   // Handles the add or update action
   const handleAddOrUpdateClick = () => {
-    getAllTravelStories(); // Fetch all stories after adding/updating
+    console.log("Input Data:", {title,storyImg,story,visitedLocations,visitedDate});
+    if (!title) {
+      setError("Please enter a title for the story");
+      return;
+    }
+    if (!story) {
+      setError("Please select an image for the story");
+      return;
+    }
+    setError("");
+
+    if (type === "edit") {
+      updateTravelStory();
+    } else {
+      addNewTravelStory();
+    }
   };
   //Delete story image and update the story
   const handleDeleteStoryImg = () => {
@@ -58,10 +113,13 @@ const AddEditTravelStory = ({
             )}
 
             {/* Close button to exit the form */}
-            <button onClick={onClose}>
+            <button className="" onClick={onClose}>
               <MdClose className="text-xl text-slate-400" />
             </button>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm mt-2">{error}</p> //
+            )}
         </div>
       </div>
 
