@@ -168,9 +168,10 @@ const Home = () => {
                 appElement={document.getElementById("root")}
                 className="model-box"
             >
-                <ViewTravelStory
-                    type={openViewModal.type}
-                    storyInfo={openViewModal.data || null}
+                <ViewTravelStory storyInfo={openViewModal.data || null} 
+                onClose={() => {}}
+                onDeleteClick={() => {}}
+                onEditClick={() => {}}
                 />
             </Modal>
 

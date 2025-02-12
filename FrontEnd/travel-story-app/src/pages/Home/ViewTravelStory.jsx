@@ -2,7 +2,7 @@ import React from "react";
 import { MdClose, MdDeleteOutline, MdUpdate } from "react-icons/md";
 
 
-const ViewTravelStory = ({onClose,onDeleteClick,onEditClick}) => {
+const ViewTravelStory = ({storyInfo,onClose,onDeleteClick,onEditClick}) => {
   return (
     <div className='relative'>
       <div className="flex items-center justify-between">
