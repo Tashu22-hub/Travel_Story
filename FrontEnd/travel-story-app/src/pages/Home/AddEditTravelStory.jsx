@@ -48,7 +48,7 @@ const AddEditTravelStory = ({
 
       if (response.data && response.data.success) {
         toast.success("Story added successfully");
-        getAllTravelStories(); // Fetch all travel stories
+        await getAllTravelStories(); // Fetch all travel stories
         onClose(); // Close the form
       }
     } catch (error) {
@@ -83,7 +83,7 @@ const AddEditTravelStory = ({
     setStoryImg(null);
   };
   return (
-    <div>
+    <div className="relative">
       {/* Header section with title and action buttons */}
       <div className="flex justify-between items-center">
         <h5 className="text-xl font-semibold text-slate-700">

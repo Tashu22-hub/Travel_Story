@@ -6,7 +6,7 @@ import { MdAdd } from 'react-icons/md'; // Material Design Add Icon
 import Modal from 'react-modal'; // Modal for Add/Edit travel stories
 import TravelStoryCard from '../../components/Cards/TravelStoryCard'; // Card component to display each travel story
 import AddEditTravelStory from './AddEditTravelStory'; // Component for adding or editing a story
-
+import ViewTravelStory from './ViewTravelStory'; // Component for viewing a story
 import { ToastContainer, toast } from 'react-toastify'; // Toast notification library
 
 const Home = () => {
@@ -21,6 +21,10 @@ const Home = () => {
         data: null, // Data to edit if modal type is "edit"
     });
 
+    const [openViewModal, setOpenViewModal] = useState({
+        isShown: false, // Modal visibility state
+        data: null, // Data to view if modal type is "view"
+    });
     // Fetches user information from the API
     const getUserInfo = async () => {
         try {
@@ -58,7 +62,8 @@ const Home = () => {
 
     // Handles viewing a specific travel story
     const handleViewStory = (data) => {
-        console.log("View story:", data); // Placeholder for view story logic
+        setOpenViewModal({ isShown: true, data}); // Opens the view modal
+        
     };
 
     // Updates the favorite status of a travel story
@@ -147,6 +152,27 @@ const Home = () => {
                 getAllTravelStories={getAllTravelStories}
             />
               
+            </Modal>
+
+            {/* View story modal */}
+           
+            <Modal 
+                isOpen={openViewModal.isShown}
+                onRequestClose={() => {}}
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0,0,0,0.2)",
+                        zIndex: 999,
+                    },
+                }}
+                appElement={document.getElementById("root")}
+                className="model-box"
+            >
+                <ViewTravelStory storyInfo={openViewModal.data || null} 
+                onClose={() => {}}
+                onDeleteClick={() => {}}
+                onEditClick={() => {}}
+                />
             </Modal>
 
             {/* Floating button to open Add/Edit Modal */}
