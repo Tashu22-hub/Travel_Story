@@ -6,7 +6,7 @@ import { MdAdd } from 'react-icons/md'; // Material Design Add Icon
 import Modal from 'react-modal'; // Modal for Add/Edit travel stories
 import TravelStoryCard from '../../components/Cards/TravelStoryCard'; // Card component to display each travel story
 import AddEditTravelStory from './AddEditTravelStory'; // Component for adding or editing a story
-
+import ViewTravelStory from './ViewTravelStory'; // Component for viewing a story
 import { ToastContainer, toast } from 'react-toastify'; // Toast notification library
 
 const Home = () => {
@@ -168,12 +168,11 @@ const Home = () => {
                 appElement={document.getElementById("root")}
                 className="model-box"
             >
-                <viewTravelStory
+                <ViewTravelStory
                     type={openViewModal.type}
                     storyInfo={openViewModal.data || null}
                 />
             </Modal>
-            
 
             {/* Floating button to open Add/Edit Modal */}
             <button
