@@ -21,6 +21,10 @@ const Home = () => {
         data: null, // Data to edit if modal type is "edit"
     });
 
+    const [openViewModal, setOpenViewModal] = useState({
+        isShown: false, // Modal visibility state
+        data: null, // Data to view if modal type is "view"
+    });
     // Fetches user information from the API
     const getUserInfo = async () => {
         try {
@@ -58,7 +62,8 @@ const Home = () => {
 
     // Handles viewing a specific travel story
     const handleViewStory = (data) => {
-        console.log("View story:", data); // Placeholder for view story logic
+        setOpenViewModal({ isShown: true, data}); // Opens the view modal
+        
     };
 
     // Updates the favorite status of a travel story
@@ -148,6 +153,27 @@ const Home = () => {
             />
               
             </Modal>
+
+            {/* View story modal */}
+           
+            <Modal 
+                isOpen={openViewModal.isShown}
+                onRequestClose={() => {}}
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0,0,0,0.2)",
+                        zIndex: 999,
+                    },
+                }}
+                appElement={document.getElementById("root")}
+                className="model-box"
+            >
+                <viewTravelStory
+                    type={openViewModal.type}
+                    storyInfo={openViewModal.data || null}
+                />
+            </Modal>
+            
 
             {/* Floating button to open Add/Edit Modal */}
             <button
