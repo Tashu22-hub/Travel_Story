@@ -57,7 +57,7 @@ const Home = () => {
 
     // Handles editing a travel story
     const handleEdit = (data) => {
-        console.log("Edit story:", data); // Placeholder for editing functionality
+        setOpenAddEditModal({ isShown: true, type: "edit", data:data }); // Opens the modal
     };
 
     // Handles viewing a specific travel story
@@ -172,8 +172,13 @@ const Home = () => {
                 onClose={() => {
                     setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
                 }}
-                onDeleteClick={() => {}}
-                onEditClick={() => {}}
+                onDeleteClick={() => {
+                    
+                }}
+                onEditClick={() => {
+                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+                    handleEdit(openViewModal.data || null)
+                }}
                 />
             </Modal>
 
