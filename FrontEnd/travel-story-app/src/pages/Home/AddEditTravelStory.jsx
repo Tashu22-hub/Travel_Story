@@ -17,11 +17,11 @@ const AddEditTravelStory = ({
   getAllTravelStories, // Function to fetch all travel stories after adding/updating
 }) => {
   // State variables for the form fields
-  const [title, setTitle] = useState("");
-  const [storyImg, setStoryImg] = useState(null); // State for the story image
-  const [story, setStory] = useState("");
-  const [visitedLocations, setVisitedLocations] = useState([]);
-  const [visitedDate, setVisitedDate] = useState(null);
+  const [title, setTitle] = useState(storyInfo?.title || ""); // State for the story title
+  const [storyImg, setStoryImg] = useState(storyInfo?.ImageUrl || null); // State for the story image
+  const [story, setStory] = useState(storyInfo?.story || ""); // State for the story content
+  const [visitedLocations, setVisitedLocations] = useState(storyInfo?.visitedLocations || []);
+  const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null);
 
   const [error, setError] = useState(""); // Error message state
 
@@ -52,13 +52,23 @@ const AddEditTravelStory = ({
         onClose(); // Close the form
       }
     } catch (error) {
-      console.error("Error adding story:", error);
-    }
+      if(
+        error.response &&
+        error.response.data &&
+        error.response.data.error
+      ){
+        setError(error.response.data.message);
+      } else {
+        //handle unexpected errors
+        setError("An error occurred while adding the story");
+      }
 
 
   };
   //update Travel Story
-  const updateTravelStory = async () => {};
+  const updateTravelStory = async () => {
+
+  };
   // Handles the add or update action
   const handleAddOrUpdateClick = () => {
     console.log("Input Data:", {title,storyImg,story,visitedLocations,visitedDate});
