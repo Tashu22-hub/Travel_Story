@@ -169,7 +169,9 @@ const Home = () => {
                 className="model-box"
             >
                 <ViewTravelStory storyInfo={openViewModal.data || null} 
-                onClose={() => {}}
+                onClose={() => {
+                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+                }}
                 onDeleteClick={() => {}}
                 onEditClick={() => {}}
                 />
