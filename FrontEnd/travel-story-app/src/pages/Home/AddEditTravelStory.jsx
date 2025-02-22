@@ -62,7 +62,7 @@ const AddEditTravelStory = ({
       let postData = {
         title,
         story,
-        ImageUrl: imageUrl || "",
+    	ImageUrl: storyInfo.ImageUrl || "",
         visitedLocations,
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
@@ -122,8 +122,29 @@ const AddEditTravelStory = ({
     }
   };
 
-  const handleDeleteStoryImg = () => {
-    setStoryImg(null);
+  const handleDeleteStoryImg = async () => {
+    const deleteImgRes = await axiosInstance.delete("/delete-image", {
+	  params: { 
+		ImageUrl: storyInfo.imageUrl,
+	  },
+	});
+	if(deleteImgRes.data){
+		const storyId = storyInfo._id;
+
+		const postData = {
+			title,
+			story,
+			visitedLocations,
+			visitedDate: moment().valueOf(),
+			ImageUrl: "",
+		};
+		// Update the story with the new image URL
+    await axiosInstance.put(
+      `/edit-travel-story/${storyId}`,
+      postData
+    );		
+	setStoryImg(null);
+	}	
   };
 
   return (
