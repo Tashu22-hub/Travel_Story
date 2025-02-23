@@ -85,7 +85,25 @@ const Home = () => {
             console.error("Error updating favorite status:", error);
         }
     };
+    // Deletes a travel story
+    const deleteTravelStory = async (Data) => {
+        try {
+            const response = await axiosInstance.delete(`/delete-travel-story/${Data._id}`);
 
+            if (response.data && response.data.success) {
+                toast.error("Story deleted successfully."); // Show success message
+                setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+                getAllTravelStories(); // Refresh the stories list
+            }
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+              setError(error.response.data.message);
+            } else {
+              setError("An error occurred while adding the story");
+            }
+            
+        }
+     }
     // Fetches user info and travel stories on component mount
     useEffect(() => {
         getUserInfo();
@@ -173,7 +191,7 @@ const Home = () => {
                     setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
                 }}
                 onDeleteClick={() => {
-                    
+                    deleteTravelStory(openViewModal.data || null);
                 }}
                 onEditClick={() => {
                     setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));

@@ -47,7 +47,7 @@ const AddEditTravelStory = ({
         onClose();
       }
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.error) {
+      if (error.response && error.response.data && error.response.data.message) {
         setError(error.response.data.message);
       } else {
         setError("An error occurred while adding the story");
@@ -171,6 +171,7 @@ const AddEditTravelStory = ({
                   <MdDeleteOutline className="text-lg" />
                   DELETE
                 </button>
+				
               </>
             )}
 
