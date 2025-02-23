@@ -8,6 +8,7 @@ import TravelStoryCard from '../../components/Cards/TravelStoryCard'; // Card co
 import AddEditTravelStory from './AddEditTravelStory'; // Component for adding or editing a story
 import ViewTravelStory from './ViewTravelStory'; // Component for viewing a story
 import { ToastContainer, toast } from 'react-toastify'; // Toast notification library
+import EmptyCard from '../../components/Cards/EmptyCard';
 
 const Home = () => {
     const navigate = useNavigate(); // Hook for navigating between routes
@@ -160,7 +161,7 @@ const Home = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div>No stories available.</div> // Display when no stories exist
+                            <EmptyCard /> // Display when no stories exist
                         )}
                     </div>
                     <div className="w-[320px]">
@@ -187,9 +188,10 @@ const Home = () => {
                 storyInfo={openAddEditModal.data}
                 onClose={() => {
                   setOpenAddEditModal({ isShown: false, type: "add", data: null });
-                  
+                  getAllTravelStories(); // Refresh the stories list
                 }}
-                getAllTravelStories={getAllTravelStories} // Refresh the stories list
+                 getAllTravelStories={getAllTravelStories} // Pass the function to refresh the list
+               
             />
               
             </Modal>
