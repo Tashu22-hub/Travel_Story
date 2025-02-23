@@ -87,23 +87,44 @@ const Home = () => {
     };
     // Deletes a travel story
     const deleteTravelStory = async (Data) => {
+        const originalStories = [...allStories]; // Store the original state
+    
         try {
+            // Optimistically update the UI
+            const updatedStories = allStories.filter(story => story._id !== Data._id);
+            setAllStories(updatedStories);
+    
+            // Make the API call to delete the story
             const response = await axiosInstance.delete(`/delete-travel-story/${Data._id}`);
-
-            if (response.data && response.data.success) {
-                toast.error("Story deleted successfully."); // Show success message
+            console.log("API Response:", response); // Debugging: Log the response
+    
+            // Check if the deletion was successful based on the API response
+            if (response.status === 200 || response.status === 204) {
+                toast.success("Story deleted successfully."); // Show success message
                 setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
-                getAllTravelStories(); // Refresh the stories list
+            } else {
+                // Revert the optimistic update if the API call fails
+                setAllStories(originalStories);
+                toast.error("Failed to delete the story.");
             }
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
-              setError(error.response.data.message);
+            // Revert the optimistic update if the API call fails
+            setAllStories(originalStories);
+    
+            // Handle different types of errors
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                toast.error(error.response.data.message || "Failed to delete the story.");
+            } else if (error.request) {
+                // The request was made but no response was received
+                toast.error("No response received from the server.");
             } else {
-              setError("An error occurred while adding the story");
+                // Something happened in setting up the request that triggered an Error
+                toast.error("An error occurred while deleting the story.");
             }
-            
         }
-     }
+    };
     // Fetches user info and travel stories on component mount
     useEffect(() => {
         getUserInfo();
@@ -166,8 +187,9 @@ const Home = () => {
                 storyInfo={openAddEditModal.data}
                 onClose={() => {
                   setOpenAddEditModal({ isShown: false, type: "add", data: null });
+                  
                 }}
-                getAllTravelStories={getAllTravelStories}
+                getAllTravelStories={getAllTravelStories} // Refresh the stories list
             />
               
             </Modal>
