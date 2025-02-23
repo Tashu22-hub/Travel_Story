@@ -10,7 +10,7 @@ import ViewTravelStory from './ViewTravelStory'; // Component for viewing a stor
 import { ToastContainer, toast } from 'react-toastify'; // Toast notification library
 import EmptyCard from '../../components/Cards/EmptyCard';
 
-import EmptyImg from '../../assets/images/add-story.svg'; // Empty state image
+import EmptyImg from '../../assets/images/add-story.png'; // Empty state image
 
 const Home = () => {
     const navigate = useNavigate(); // Hook for navigating between routes
