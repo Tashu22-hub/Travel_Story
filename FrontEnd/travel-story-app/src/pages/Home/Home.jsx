@@ -10,6 +10,8 @@ import ViewTravelStory from './ViewTravelStory'; // Component for viewing a stor
 import { ToastContainer, toast } from 'react-toastify'; // Toast notification library
 import EmptyCard from '../../components/Cards/EmptyCard';
 
+import EmptyImg from '../../assets/images/add-story.svg'; // Empty state image
+
 const Home = () => {
     const navigate = useNavigate(); // Hook for navigating between routes
     const [userInfo, setUserInfo] = useState(null); // Holds user information
@@ -161,7 +163,11 @@ const Home = () => {
                                 ))}
                             </div>
                         ) : (
-                            <EmptyCard /> // Display when no stories exist
+                            <EmptyCard 
+                                imgSrc = {EmptyImg}
+                                message={`Start creating your first Story! Click the  "Add Story" button button to 
+                                jot down your thoughts,ideas, and memories. Let's get started!`}
+                            /> // Display when no stories exist
                         )}
                     </div>
                     <div className="w-[320px]">
