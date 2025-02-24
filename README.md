@@ -64,7 +64,7 @@ I’m thrilled to announce the completion of my **Travel Story Platform**, a web
 🌟 **Why This Project?**
 Traveling creates unforgettable memories, and this platform provides a digital space for users to preserve and relive those moments. Whether it’s a weekend getaway or a global adventure, every story deserves to be told!
 
-Check out the project on [GitHub](#) (link to your repository) and let me know your thoughts! 💬
+Check out the project on [GitHub](#) ([link to your repository](https://github.com/JahanRazh/Travel_Story.git)) and let me know your thoughts! 💬
 
 #MERNStack #React #Vite #TailwindCSS #JWT #WebDevelopment #TravelStories #Coding #FullStackDevelopment #VS Code #Postman
 
