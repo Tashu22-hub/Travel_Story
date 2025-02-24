@@ -230,7 +230,7 @@ const Home = () => {
                         ) : (
                             <EmptyCard
                                 imgSrc={EmptyImg}
-                                message="Start creating your first Story! Click the 'Add Story' button to jot down your thoughts, ideas, and memories. Let's get started!"
+                                message={getEmptyCardMessage(filterType)}
                             />
                         )}
                     </div>

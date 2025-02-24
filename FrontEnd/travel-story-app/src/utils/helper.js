@@ -15,3 +15,15 @@ export const getInitials = (name) => {
 
     return initials.toUpperCase();
 };
+
+export const getEmptyCardMessage = (filterType) => {
+    switch(filterType) {
+        case "search":
+            return "Oops ! No stories found matching your search.";
+        case "date":
+            return "No stories found in the given date range.";
+        default:
+            return "Start creating your first Story! Click the 'Add Story' button to " +
+            "jot down your thoughts, ideas, and memories. Let's get started!";
+    }
+}
