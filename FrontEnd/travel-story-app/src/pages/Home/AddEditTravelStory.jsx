@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { MdAdd, MdDeleteOutline, MdUpdate, MdClose } from "react-icons/md";
 import DataSelector from "../../components/Input/DataSelector";
 import { GrTarget } from "react-icons/gr";
+import { ToastContainer, toast } from 'react-toastify';
 import ImageSelector from "../../components/Input/ImageSelector";
 import TagInput from "../../components/Input/TagInput";
 import uploadImage from "../../utils/uploadImage";
 import axiosInstance from "../../utils/axiosInstance";
-import { toast } from "react-toastify";
 import moment from "moment";
 
 const AddEditTravelStory = ({
@@ -152,6 +152,7 @@ const AddEditTravelStory = ({
   };
 
   return (
+    <>
     <div className="relative">
       <div className="flex justify-between items-center">
         <h5 className="text-xl font-semibold text-slate-700">
@@ -233,7 +234,10 @@ const AddEditTravelStory = ({
         </div>
       </div>
     </div>
+    <ToastContainer />
+    </>
   );
+  
 };
 
 export default AddEditTravelStory;
