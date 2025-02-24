@@ -224,6 +224,7 @@ const Home = () => {
                                 pagesNavigation
                             />
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
