@@ -3,7 +3,12 @@ import moment from "moment";
 import { GrMapLocation } from "react-icons/gr";
 import { MdClose, MdDeleteOutline, MdUpdate } from "react-icons/md";
 
-const ViewTravelStory = ({ onClose, onDeleteClick, onEditClick, storyInfo }) => {
+const ViewTravelStory = ({ 
+  onClose,
+  onDeleteClick,
+  onEditClick,
+  storyInfo 
+}) => {
   return (
     <div className="relative">
       {/* Action Buttons */}
