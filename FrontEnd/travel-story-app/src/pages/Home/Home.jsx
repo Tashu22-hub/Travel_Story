@@ -11,12 +11,18 @@ import { ToastContainer, toast } from 'react-toastify'; // Toast notification li
 import EmptyCard from '../../components/Cards/EmptyCard';
 
 import EmptyImg from '../../assets/images/add-story.png'; // Empty state image
+import { Day } from 'react-day-picker';
 
 const Home = () => {
     const navigate = useNavigate(); // Hook for navigating between routes
     const [userInfo, setUserInfo] = useState(null); // Holds user information
     const [allStories, setAllStories] = useState([]); // Holds all travel stories
     const [loading, setLoading] = useState(true); // Loading state for data fetching
+
+    const[searchQuery, setSearchQuery] = useState('');
+    const [filterType, setFilterType] = useState(''); // Holds all travel stories
+    
+    const[dataRange, setDataRange] = useState( {form: null, to: null} ); // Holds all travel stories
 
     const [openAddEditModal, setOpenAddEditModal] = useState({
         isShown: false, // Modal visibility state
@@ -128,6 +134,37 @@ const Home = () => {
             }
         }
     };
+
+    //search story
+    const onSearchStory = async (query) => {
+        try {
+            const response = await axiosInstance.get(`/search-travel-stories`, {
+                params: {
+                    query,
+                },
+            });
+            if (response.data && response.data.stories) {
+                setFilterType("search");
+                setAllStories(response.data.stories);
+            }
+        } catch (error) {
+            console.error("An error occurred while searching stories:", error);
+        }
+    };
+    const handleClearSearch = () => {
+        setFilterType("");
+        getAllTravelStories();
+    };
+    
+    //Handle Filter Travel Story By Date Range
+    const filterStoriesByDate = async (day) => {}
+
+    //handle Date Range Select
+    const handleDayClick = (day) => {
+        setDataRange(day);
+        filterStoriesByDate(day);
+    };
+
     // Fetches user info and travel stories on component mount
     useEffect(() => {
         getUserInfo();
@@ -140,7 +177,14 @@ const Home = () => {
 
     return (
         <>
-            <Navbar userInfo={userInfo} /> {/* Navbar with user info */}
+            <Navbar 
+            userInfo={userInfo} 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery}
+            onSearchNote={onSearchStory} 
+            handleClearSearch={handleClearSearch}
+
+            /> {/* Navbar with user info */}
 
             <div className="container mx-auto px-10">
                 <div className="flex gap-7">
@@ -171,7 +215,15 @@ const Home = () => {
                         )}
                     </div>
                     <div className="w-[320px]">
-                        {/* Additional content can go here */}
+                        <div className='bg-white border-slate-200 show-slate-200/60 rounded-lg'>
+                        <div className='p-3'>
+                            <DayPicker
+                                captionLayout="dropdown-buttons"
+                                mode="range"
+                                selected={dataRange}
+                                pagesNavigation
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
