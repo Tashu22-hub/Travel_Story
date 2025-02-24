@@ -1,196 +1,194 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../../components/Navbar'; // Navigation bar component import
-import { useNavigate } from 'react-router-dom'; // Navigation hook for routing
-import axiosInstance from '../../utils/axiosInstance'; // Custom Axios instance for API requests
-import { MdAdd } from 'react-icons/md'; // Material Design Add Icon
-import Modal from 'react-modal'; // Modal for Add/Edit travel stories
-import TravelStoryCard from '../../components/Cards/TravelStoryCard'; // Card component to display each travel story
-import AddEditTravelStory from './AddEditTravelStory'; // Component for adding or editing a story
-import ViewTravelStory from './ViewTravelStory'; // Component for viewing a story
-import { ToastContainer, toast } from 'react-toastify'; // Toast notification library
+import Navbar from '../../components/Navbar';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../utils/axiosInstance';
+import { MdAdd } from 'react-icons/md';
+import Modal from 'react-modal';
+import TravelStoryCard from '../../components/Cards/TravelStoryCard';
+import AddEditTravelStory from './AddEditTravelStory';
+import ViewTravelStory from './ViewTravelStory';
+import { ToastContainer, toast } from 'react-toastify';
 import EmptyCard from '../../components/Cards/EmptyCard';
-
-import EmptyImg from '../../assets/images/add-story.png'; // Empty state image
-import { Day } from 'react-day-picker';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
+import EmptyImg from '../../assets/images/add-story.png';
 
 const Home = () => {
-    const navigate = useNavigate(); // Hook for navigating between routes
-    const [userInfo, setUserInfo] = useState(null); // Holds user information
-    const [allStories, setAllStories] = useState([]); // Holds all travel stories
-    const [loading, setLoading] = useState(true); // Loading state for data fetching
-
-    const[searchQuery, setSearchQuery] = useState('');
-    const [filterType, setFilterType] = useState(''); // Holds all travel stories
-    
-    const[dataRange, setDataRange] = useState( {form: null, to: null} ); // Holds all travel stories
+    const navigate = useNavigate();
+    const [userInfo, setUserInfo] = useState(null);
+    const [allStories, setAllStories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterType, setFilterType] = useState('');
+    const [dateRange, setDateRange] = useState({ from: null, to: null });
 
     const [openAddEditModal, setOpenAddEditModal] = useState({
-        isShown: false, // Modal visibility state
-        type: "add", // Modal type (add/edit)
-        data: null, // Data to edit if modal type is "edit"
+        isShown: false,
+        type: "add",
+        data: null,
     });
 
     const [openViewModal, setOpenViewModal] = useState({
-        isShown: false, // Modal visibility state
-        data: null, // Data to view if modal type is "view"
+        isShown: false,
+        data: null,
     });
-    // Fetches user information from the API
+
     const getUserInfo = async () => {
         try {
             const response = await axiosInstance.get("/get-user");
-            if (response.data && response.data.user) {
-                setUserInfo(response.data.user); // Updates the user info state
+            if (response.data?.user) {
+                setUserInfo(response.data.user);
             }
         } catch (error) {
             if (error.response?.status === 401) {
-                localStorage.clear(); // Clears local storage if the user is unauthorized
-                navigate("/login"); // Redirects to the login page
+                localStorage.clear();
+                navigate("/login");
             }
             console.error("Error fetching user info:", error);
         }
     };
 
-    // Fetches all travel stories from the API
     const getAllTravelStories = async () => {
         try {
             const response = await axiosInstance.get("/get-all-travel-stories");
-            if (response.data && response.data.travelStories) {
-                setAllStories(response.data.travelStories); // Updates the state with travel stories
+            if (response.data?.travelStories) {
+                setAllStories(response.data.travelStories);
             }
         } catch (error) {
             console.error("An error occurred while fetching stories:", error);
+            toast.error("Failed to fetch stories");
         } finally {
-            setLoading(false); // Stops loading spinner
+            setLoading(false);
         }
     };
 
-    // Handles editing a travel story
     const handleEdit = (data) => {
-        setOpenAddEditModal({ isShown: true, type: "edit", data:data }); // Opens the modal
+        setOpenAddEditModal({ isShown: true, type: "edit", data });
     };
 
-    // Handles viewing a specific travel story
     const handleViewStory = (data) => {
-        setOpenViewModal({ isShown: true, data}); // Opens the view modal
-        
+        setOpenViewModal({ isShown: true, data });
     };
 
-    // Updates the favorite status of a travel story
     const updateFavorite = async (storyData) => {
         try {
             const response = await axiosInstance.put(`/update-favourite/${storyData._id}`, {
-                isFavourite: !storyData.isFavourite, // Toggle favorite status
+                isFavourite: !storyData.isFavourite,
             });
             if (response.data) {
-                // Update local state to reflect the change
                 const updatedStories = allStories.map((story) =>
                     story._id === storyData._id ? { ...story, isFavourite: !story.isFavourite } : story
                 );
                 setAllStories(updatedStories);
-                toast.success("Story updated successfully."); // Show success message
-                getAllTravelStories(); // Refresh the stories list
+                toast.success("Story updated successfully.");
             }
         } catch (error) {
             console.error("Error updating favorite status:", error);
+            toast.error("Failed to update favorite status");
         }
     };
-    // Deletes a travel story
-    const deleteTravelStory = async (Data) => {
-        const originalStories = [...allStories]; // Store the original state
-    
+
+    const deleteTravelStory = async (data) => {
+        if (!data?._id) return;
+        
+        const originalStories = [...allStories];
         try {
-            // Optimistically update the UI
-            const updatedStories = allStories.filter(story => story._id !== Data._id);
+            const updatedStories = allStories.filter(story => story._id !== data._id);
             setAllStories(updatedStories);
-    
-            // Make the API call to delete the story
-            const response = await axiosInstance.delete(`/delete-travel-story/${Data._id}`);
-            console.log("API Response:", response); // Debugging: Log the response
-    
-            // Check if the deletion was successful based on the API response
+
+            const response = await axiosInstance.delete(`/delete-travel-story/${data._id}`);
+            
             if (response.status === 200 || response.status === 204) {
-                toast.success("Story deleted successfully."); // Show success message
-                setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+                toast.success("Story deleted successfully.");
+                setOpenViewModal({ isShown: false, data: null });
             } else {
-                // Revert the optimistic update if the API call fails
                 setAllStories(originalStories);
                 toast.error("Failed to delete the story.");
             }
         } catch (error) {
-            // Revert the optimistic update if the API call fails
             setAllStories(originalStories);
-    
-            // Handle different types of errors
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                toast.error(error.response.data.message || "Failed to delete the story.");
-            } else if (error.request) {
-                // The request was made but no response was received
-                toast.error("No response received from the server.");
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                toast.error("An error occurred while deleting the story.");
-            }
+            toast.error(error.response?.data?.message || "Failed to delete the story");
         }
     };
 
-    //search story
     const onSearchStory = async (query) => {
         try {
             const response = await axiosInstance.get(`/search-travel-stories`, {
-                params: {
-                    query,
-                },
+                params: { query },
             });
-            if (response.data && response.data.stories) {
+            if (response.data?.stories) {
                 setFilterType("search");
                 setAllStories(response.data.stories);
             }
         } catch (error) {
             console.error("An error occurred while searching stories:", error);
+            toast.error("Failed to search stories");
         }
     };
+
     const handleClearSearch = () => {
         setFilterType("");
+        setSearchQuery("");
         getAllTravelStories();
     };
-    
-    //Handle Filter Travel Story By Date Range
-    const filterStoriesByDate = async (day) => {}
 
-    //handle Date Range Select
-    const handleDayClick = (day) => {
-        setDataRange(day);
-        filterStoriesByDate(day);
+    const filterStoriesByDate = async (dateRange) => {
+        if (!dateRange?.from || !dateRange?.to) return;
+
+        try {
+            const startDate = new Date(dateRange.from).getTime();
+            const endDate = new Date(dateRange.to).getTime();
+
+            const response = await axiosInstance.get("/filter-travel-stories", {
+                params: { startDate, endDate },
+            });
+            
+            if (response.data?.stories) {
+                setFilterType("date");
+                setAllStories(response.data.stories);
+            }
+        } catch (error) {
+            console.error("An error occurred while filtering stories by date:", error);
+            toast.error("Failed to filter stories by date");
+        }
     };
 
-    // Fetches user info and travel stories on component mount
+    const handleDayClick = (range) => {
+        setDateRange(range);
+        if (range?.from && range?.to) {
+            filterStoriesByDate(range);
+        }
+    };
+
+    const handleCloseAddEditModal = () => {
+        setOpenAddEditModal({ isShown: false, type: "add", data: null });
+        getAllTravelStories();
+    };
+
     useEffect(() => {
         getUserInfo();
         getAllTravelStories();
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>; // Display loading message until data is fetched
+        return <div className="flex items-center justify-center h-screen">Loading...</div>;
     }
 
     return (
         <>
-            <Navbar 
-            userInfo={userInfo} 
-            searchQuery={searchQuery} 
-            setSearchQuery={setSearchQuery}
-            onSearchNote={onSearchStory} 
-            handleClearSearch={handleClearSearch}
-
-            /> {/* Navbar with user info */}
+            <Navbar
+                userInfo={userInfo}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                onSearchStory={onSearchStory}
+                handleClearSearch={handleClearSearch}
+            />
 
             <div className="container mx-auto px-10">
                 <div className="flex gap-7">
                     <div className="flex-1">
                         {allStories.length > 0 ? (
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {allStories.map((item) => (
                                     <TravelStoryCard
                                         key={item._id}
@@ -207,59 +205,30 @@ const Home = () => {
                                 ))}
                             </div>
                         ) : (
-                            <EmptyCard 
-                                imgSrc = {EmptyImg}
-                                message={`Start creating your first Story! Click the  "Add Story" button button to 
-                                jot down your thoughts,ideas, and memories. Let's get started!`}
-                            /> // Display when no stories exist
+                            <EmptyCard
+                                imgSrc={EmptyImg}
+                                message="Start creating your first Story! Click the 'Add Story' button to jot down your thoughts, ideas, and memories. Let's get started!"
+                            />
                         )}
                     </div>
-                    <div className="w-[320px]">
-                        <div className='bg-white border-slate-200 show-slate-200/60 rounded-lg'>
-                        <div className='p-3'>
-                            <DayPicker
-                                captionLayout="dropdown-buttons"
-                                mode="range"
-                                selected={dataRange}
-                                pagesNavigation
-                            />
-                        </div>
+                    <div className="w-[320px] hidden md:block">
+                        <div className="bg-white border border-slate-200 shadow-slate-200/60 rounded-lg">
+                            <div className="p-3">
+                                <DayPicker
+                                    mode="range"
+                                    selected={dateRange}
+                                    onSelect={handleDayClick}
+                                    numberOfMonths={1}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-              
-            {/* Add/Edit story modal */}
-            <Modal 
-                isOpen={openAddEditModal.isShown}
-                onRequestClose={() => {}}
-                style={{
-                    overlay: {
-                        backgroundColor: "rgba(0,0,0,0.2)",
-                        zIndex: 999,
-                    },
-                }}
-                appElement={document.getElementById("root")}
-                className="model-box"
-            >
-            <AddEditTravelStory
-                type={openAddEditModal.type}
-                storyInfo={openAddEditModal.data}
-                onClose={() => {
-                  setOpenAddEditModal({ isShown: false, type: "add", data: null });
-                  getAllTravelStories(); // Refresh the stories list
-                }}
-                 getAllTravelStories={getAllTravelStories} // Pass the function to refresh the list
-               
-            />
-              
-            </Modal>
 
-            {/* View story modal */}
-           
-            <Modal 
-                isOpen={openViewModal.isShown}
-                onRequestClose={() => {}}
+            <Modal
+                isOpen={openAddEditModal.isShown}
+                onRequestClose={handleCloseAddEditModal}
                 style={{
                     overlay: {
                         backgroundColor: "rgba(0,0,0,0.2)",
@@ -269,31 +238,45 @@ const Home = () => {
                 appElement={document.getElementById("root")}
                 className="model-box"
             >
-                <ViewTravelStory storyInfo={openViewModal.data || null} 
-                onClose={() => {
-                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
-                }}
-                onDeleteClick={() => {
-                    deleteTravelStory(openViewModal.data || null);
-                }}
-                onEditClick={() => {
-                    setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
-                    handleEdit(openViewModal.data || null)
-                }}
+                <AddEditTravelStory
+                    type={openAddEditModal.type}
+                    storyInfo={openAddEditModal.data}
+                    onClose={handleCloseAddEditModal}
+                    getAllTravelStories={getAllTravelStories}
                 />
             </Modal>
 
-            {/* Floating button to open Add/Edit Modal */}
-            <button
-               className="w-16 h-16 item-center justfy-center rounded-full bg-current hover:bg-cyan-400 fixed right-10 bottom-10"
-               onClick={() => {
-                    setOpenAddEditModal({ isShown: true, type: "add", data: null });
-               }}
+            <Modal
+                isOpen={openViewModal.isShown}
+                onRequestClose={() => setOpenViewModal({ isShown: false, data: null })}
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0,0,0,0.2)",
+                        zIndex: 999,
+                    },
+                }}
+                appElement={document.getElementById("root")}
+                className="model-box"
             >
-              <MdAdd className="icon-btn text-3xl text-white w-16 h-12 item" />
-            </button> 
+                <ViewTravelStory
+                    storyInfo={openViewModal.data}
+                    onClose={() => setOpenViewModal({ isShown: false, data: null })}
+                    onDeleteClick={() => deleteTravelStory(openViewModal.data)}
+                    onEditClick={() => {
+                        setOpenViewModal({ isShown: false, data: null });
+                        handleEdit(openViewModal.data);
+                    }}
+                />
+            </Modal>
 
-            <ToastContainer /> {/* Toast container for notifications */}
+            <button
+                className="fixed right-10 bottom-10 w-16 h-16 flex items-center justify-center rounded-full bg-cyan-500 hover:bg-cyan-400 transition-colors"
+                onClick={() => setOpenAddEditModal({ isShown: true, type: "add", data: null })}
+            >
+                <MdAdd className="text-3xl text-white" />
+            </button>
+
+            <ToastContainer />
         </>
     );
 };
