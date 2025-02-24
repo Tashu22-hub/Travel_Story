@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { MdAdd, MdDeleteOutline, MdUpdate, MdClose } from "react-icons/md";
 import DataSelector from "../../components/Input/DataSelector";
 import { GrTarget } from "react-icons/gr";
+import { ToastContainer, toast } from 'react-toastify';
 import ImageSelector from "../../components/Input/ImageSelector";
 import TagInput from "../../components/Input/TagInput";
 import uploadImage from "../../utils/uploadImage";
 import axiosInstance from "../../utils/axiosInstance";
-import { toast } from "react-toastify";
 import moment from "moment";
 
 const AddEditTravelStory = ({
@@ -21,7 +21,9 @@ const AddEditTravelStory = ({
   const [visitedLocations, setVisitedLocations] = useState(
     storyInfo?.visitedLocations || []
   );
-  const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null);
+  const [visitedDate, setVisitedDate] = useState(
+    storyInfo?.visitedDate || null
+  );
   const [error, setError] = useState("");
 
   const addNewTravelStory = async () => {
@@ -47,7 +49,11 @@ const AddEditTravelStory = ({
         onClose();
       }
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         setError(error.response.data.message);
       } else {
         setError("An error occurred while adding the story");
@@ -62,7 +68,7 @@ const AddEditTravelStory = ({
       let postData = {
         title,
         story,
-    	ImageUrl: storyInfo.ImageUrl || "",
+        ImageUrl: storyInfo.ImageUrl || "",
         visitedLocations,
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
@@ -96,8 +102,9 @@ const AddEditTravelStory = ({
       }
     }
   };
-
-  const handleAddOrUpdateClick = () => {
+//await and async use krla just now update krgnd puluvn una
+// for the operation to complete
+  const handleAddOrUpdateClick = async () => {
     console.log("Input Data:", {
       title,
       storyImg,
@@ -116,38 +123,36 @@ const AddEditTravelStory = ({
     setError("");
 
     if (type === "edit") {
-      updateTravelStory();
+      await updateTravelStory(); //awit for the operation to complete
     } else {
-      addNewTravelStory();
+      await addNewTravelStory();
     }
   };
 
   const handleDeleteStoryImg = async () => {
     const deleteImgRes = await axiosInstance.delete("/delete-image", {
-	  params: { 
-		ImageUrl: storyInfo.imageUrl,
-	  },
-	});
-	if(deleteImgRes.data){
-		const storyId = storyInfo._id;
+      params: {
+        ImageUrl: storyInfo.imageUrl,
+      },
+    });
+    if (deleteImgRes.data) {
+      const storyId = storyInfo._id;
 
-		const postData = {
-			title,
-			story,
-			visitedLocations,
-			visitedDate: moment().valueOf(),
-			ImageUrl: "",
-		};
-		// Update the story with the new image URL
-    await axiosInstance.put(
-      `/edit-travel-story/${storyId}`,
-      postData
-    );		
-	setStoryImg(null);
-	}	
+      const postData = {
+        title,
+        story,
+        visitedLocations,
+        visitedDate: moment().valueOf(),
+        ImageUrl: "",
+      };
+      // Update the story with the new image URL
+      await axiosInstance.put(`/edit-travel-story/${storyId}`, postData);
+      setStoryImg(null);
+    }
   };
 
   return (
+    <>
     <div className="relative">
       <div className="flex justify-between items-center">
         <h5 className="text-xl font-semibold text-slate-700">
@@ -156,22 +161,28 @@ const AddEditTravelStory = ({
         <div>
           <div className="flex items-center gap-3 bg-cyan-50/50 p-2 rounded-l-lg">
             {type === "add" ? (
-              <button className="btn-small" onClick={handleAddOrUpdateClick}>
+              <button
+                className="btn-small"
+                onClick={async () => {
+                  await handleAddOrUpdateClick(); // Wait for the operation to complete
+                  onClose(); // Close the modal after the operation is done
+                }}
+              >
                 <MdAdd className="text-lg" />
                 ADD STORY
               </button>
             ) : (
               <>
-                <button className="btn-small" onClick={handleAddOrUpdateClick}>
+                <button
+                  className="btn-small"
+                  onClick={async () => {
+                    await handleAddOrUpdateClick(); // Wait for the operation to complete
+                    onClose(); // Close the modal after the operation is done
+                  }}
+                >
                   <MdUpdate className="text-lg" />
                   UPDATE STORY
                 </button>
-
-                <button className="btn-small btn-delete" onClick={onClose}>
-                  <MdDeleteOutline className="text-lg" />
-                  DELETE
-                </button>
-				
               </>
             )}
 
@@ -223,7 +234,10 @@ const AddEditTravelStory = ({
         </div>
       </div>
     </div>
+    <ToastContainer />
+    </>
   );
+  
 };
 
 export default AddEditTravelStory;

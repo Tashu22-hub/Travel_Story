@@ -24,7 +24,7 @@ const ViewTravelStory = ({
               UPDATE STORY
             </button>
             <button
-              className="btn-small"
+              className="btn-small btn-delete"
               onClick={onDeleteClick}
               aria-label="Delete story"
             >
