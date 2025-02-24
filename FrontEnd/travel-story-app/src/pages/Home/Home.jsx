@@ -12,11 +12,14 @@ import EmptyCard from '../../components/Cards/EmptyCard';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import EmptyImg from '../../assets/images/add-story.png';
+import FilterInfoTitle from '../../components/Cards/FilterInfoTitle';
+import { getEmptyCardMessage } from '../../utils/helper';
 
 const Home = () => {
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
     const [allStories, setAllStories] = useState([]);
+    const [filteredStories, setFilteredStories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('');
@@ -53,6 +56,7 @@ const Home = () => {
             const response = await axiosInstance.get("/get-all-travel-stories");
             if (response.data?.travelStories) {
                 setAllStories(response.data.travelStories);
+                setFilteredStories(response.data.travelStories);
             }
         } catch (error) {
             console.error("An error occurred while fetching stories:", error);
@@ -80,6 +84,7 @@ const Home = () => {
                     story._id === storyData._id ? { ...story, isFavourite: !story.isFavourite } : story
                 );
                 setAllStories(updatedStories);
+                setFilteredStories(updatedStories);
                 toast.success("Story updated successfully.");
             }
         } catch (error) {
@@ -95,6 +100,7 @@ const Home = () => {
         try {
             const updatedStories = allStories.filter(story => story._id !== data._id);
             setAllStories(updatedStories);
+            setFilteredStories(updatedStories);
 
             const response = await axiosInstance.delete(`/delete-travel-story/${data._id}`);
             
@@ -103,33 +109,43 @@ const Home = () => {
                 setOpenViewModal({ isShown: false, data: null });
             } else {
                 setAllStories(originalStories);
+                setFilteredStories(originalStories);
                 toast.error("Failed to delete the story.");
             }
         } catch (error) {
             setAllStories(originalStories);
+            setFilteredStories(originalStories);
             toast.error(error.response?.data?.message || "Failed to delete the story");
         }
     };
 
-    const onSearchStory = async (query) => {
-        try {
-            const response = await axiosInstance.get(`/search-travel-stories`, {
-                params: { query },
-            });
-            if (response.data?.stories) {
-                setFilterType("search");
-                setAllStories(response.data.stories);
-            }
-        } catch (error) {
-            console.error("An error occurred while searching stories:", error);
-            toast.error("Failed to search stories");
+    const searchStories = (query) => {
+        const searchTerm = query.toLowerCase().trim();
+        if (!searchTerm) {
+            setFilteredStories(allStories);
+            setFilterType("");
+            return;
         }
+
+        const matchedStories = allStories.filter(story => {
+            const titleMatch = story.title.toLowerCase().includes(searchTerm);
+            const storyMatch = story.story.toLowerCase().includes(searchTerm);
+            const locationMatch = story.visitedLocations.some(location => 
+                location.toLowerCase().includes(searchTerm)
+            );
+            
+            return titleMatch || storyMatch || locationMatch;
+        });
+
+        setFilteredStories(matchedStories);
+        setFilterType("search");
+        setSearchQuery(query);
     };
 
     const handleClearSearch = () => {
         setFilterType("");
         setSearchQuery("");
-        getAllTravelStories();
+        setFilteredStories(allStories);
     };
 
     const filterStoriesByDate = async (dateRange) => {
@@ -139,14 +155,13 @@ const Home = () => {
             const startDate = new Date(dateRange.from).getTime();
             const endDate = new Date(dateRange.to).getTime();
 
-            const response = await axiosInstance.get("/filter-travel-stories", {
-                params: { startDate, endDate },
+            const filteredStories = allStories.filter(story => {
+                const storyDate = new Date(story.visitedDate).getTime();
+                return storyDate >= startDate && storyDate <= endDate;
             });
-            
-            if (response.data?.stories) {
-                setFilterType("date");
-                setAllStories(response.data.stories);
-            }
+
+            setFilteredStories(filteredStories);
+            setFilterType("date");
         } catch (error) {
             console.error("An error occurred while filtering stories by date:", error);
             toast.error("Failed to filter stories by date");
@@ -158,6 +173,12 @@ const Home = () => {
         if (range?.from && range?.to) {
             filterStoriesByDate(range);
         }
+    };
+
+    const resetFilter = () => {
+        setDateRange({ from: null, to: null });
+        setFilterType("");
+        setFilteredStories(allStories);
     };
 
     const handleCloseAddEditModal = () => {
@@ -180,16 +201,22 @@ const Home = () => {
                 userInfo={userInfo}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
-                onSearchStory={onSearchStory}
+                onSearchNote={searchStories}
                 handleClearSearch={handleClearSearch}
             />
 
             <div className="container mx-auto px-10">
+                <FilterInfoTitle
+                    filterType={filterType}
+                    filterDates={dateRange}
+                    onClear={resetFilter}
+                />
+
                 <div className="flex gap-7">
                     <div className="flex-1">
-                        {allStories.length > 0 ? (
+                        {filteredStories.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {allStories.map((item) => (
+                                {filteredStories.map((item) => (
                                     <TravelStoryCard
                                         key={item._id}
                                         ImgUrl={item.ImageUrl}
@@ -207,10 +234,11 @@ const Home = () => {
                         ) : (
                             <EmptyCard
                                 imgSrc={EmptyImg}
-                                message="Start creating your first Story! Click the 'Add Story' button to jot down your thoughts, ideas, and memories. Let's get started!"
+                                message={getEmptyCardMessage(filterType)}
                             />
                         )}
                     </div>
+                  
                     <div className="w-[320px] hidden md:block">
                         <div className="bg-white border border-slate-200 shadow-slate-200/60 rounded-lg">
                             <div className="p-3">
