@@ -81,6 +81,13 @@ const Home = () => {
                 );
                 setAllStories(updatedStories);
                 toast.success("Story updated successfully.");
+                if(filterType === "search"&&searchQuery){
+                    onSearchStory(searchQuery);
+                }else if(filterType === "date"){
+                    filterStoriesByDate(dateRange);
+                }else{
+                    getAllTravelStories();
+                }
             }
         } catch (error) {
             console.error("Error updating favorite status:", error);
