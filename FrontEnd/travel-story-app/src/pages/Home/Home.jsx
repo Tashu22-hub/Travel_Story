@@ -160,6 +160,13 @@ const Home = () => {
         }
     };
 
+    const resetFilter = () => {
+        
+        setDateRange({ from: null, to: null });
+        setFilterType("");
+        getAllTravelStories();
+    };
+    
     const handleCloseAddEditModal = () => {
         setOpenAddEditModal({ isShown: false, type: "add", data: null });
         getAllTravelStories();
@@ -185,6 +192,15 @@ const Home = () => {
             />
 
             <div className="container mx-auto px-10">
+
+                <filterInfoTitle
+                    filterType = {filterType}
+                    filterDates = {dateRange}
+                    onClear={() => {
+                        resetFilter();
+                    }}
+                />
+
                 <div className="flex gap-7">
                     <div className="flex-1">
                         {allStories.length > 0 ? (
