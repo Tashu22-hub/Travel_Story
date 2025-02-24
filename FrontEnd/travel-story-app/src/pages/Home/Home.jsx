@@ -12,7 +12,7 @@ import EmptyCard from '../../components/Cards/EmptyCard';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import EmptyImg from '../../assets/images/add-story.png';
-
+import FilterInfoTitle from '../../components/Cards/FilterInfoTitle';
 const Home = () => {
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState(null);
@@ -166,7 +166,7 @@ const Home = () => {
         setFilterType("");
         getAllTravelStories();
     };
-    
+
     const handleCloseAddEditModal = () => {
         setOpenAddEditModal({ isShown: false, type: "add", data: null });
         getAllTravelStories();
@@ -193,9 +193,9 @@ const Home = () => {
 
             <div className="container mx-auto px-10">
 
-                <filterInfoTitle
-                    filterType = {filterType}
-                    filterDates = {dateRange}
+                <FilterInfoTitle
+                    filterType={filterType}
+                    filterDates={dateRange}
                     onClear={() => {
                         resetFilter();
                     }}
