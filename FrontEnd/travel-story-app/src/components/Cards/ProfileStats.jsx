@@ -12,14 +12,13 @@ const ProfileStats = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="w-2/4 p-10 bg-white rounded-lg shadow-lg z-50 mx-auto mt-10">
       <h2 className="text-2xl font-semibold mb-4">Profile Statistics</h2>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <p><strong>Full Name:</strong> {userInfo.fullName}</p>
-        <p><strong>Email:</strong> {userInfo.email}</p>
-        <p><strong>Password:</strong> {userInfo.password}</p>
-        <p><strong>Joined Date:</strong> {userInfo.createdOn || "N/A"}</p>
-        {/* Add more stats if available */}
+      <div>
+        <p className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"><strong>Full Name:</strong> {userInfo.fullName}</p>
+        <p className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"><strong>Email:</strong> {userInfo.email}</p>
+        <p className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"><strong>Password:</strong> {userInfo.password}</p>
+        <p className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"><strong>Joined Date:</strong> {userInfo.createdOn || "N/A"}</p>
       </div>
       <button
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
