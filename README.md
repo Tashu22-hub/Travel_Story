@@ -1,5 +1,4 @@
 ### Project Description: Travel Story Platform using MERN Stack (React + Vite, TailwindCSS, JWT, Postman, VS Code)
-
 #### Overview:
 The **Travel Story Platform** is a web application designed for travelers to document, share, and relive their travel memories. Built using the **MERN stack** (MongoDB, Express.js, React, and Node.js), this platform allows users to create, update, delete, and view their travel stories. The application is styled using **TailwindCSS** for a modern and responsive design, and **JWT (JSON Web Tokens)** is used for secure user authentication. The development process is streamlined using **VS Code** and API testing is done via **Postman**.
 
