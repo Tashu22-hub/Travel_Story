@@ -3,6 +3,7 @@ import React from 'react';
 import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import SignUp from './pages/Auth/SignUp';
+import ProfileStats from "./components/Cards/ProfileStats"; // Import ProfileStats
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Root />} />
           <Route path="/dashboard" element={<Home />} />
+          <Route path="/profile-stats" element={<ProfileStats />} /> {/* New Route */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<Navigate to="/" />} />
