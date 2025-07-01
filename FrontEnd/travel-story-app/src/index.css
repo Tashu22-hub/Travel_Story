@@ -31,7 +31,7 @@
   background-image: url("src/assets/A beautiful tropical.jpg"); /* Update with your image path */
 }
 .bg-Signup-bg-img {
-  background-image: url("src/assets/A stunning tropical.png"); /* Update with your image path */
+  background-image: url("../public/A\ stunning\ tropical.png"); /* Update with your image path */
 }
 
 /*Custom scrollbar Styles*/
