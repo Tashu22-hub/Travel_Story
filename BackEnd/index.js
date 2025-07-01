@@ -2,7 +2,7 @@
 require("dotenv").config(); // Load environment variables from .env file
 const mongoose = require("mongoose"); // MongoDB ODM (Object Data Modeling) library
 const config = require("./config.json"); // Configuration file containing database connection string
-const bcrypt = require("bcrypt"); // Library for hashing passwords
+const bcrypt = require("bcryptjs"); // Library for hashing passwords
 const express = require("express"); // Web framework for Node.js
 const cors = require("cors"); // Middleware to enable CORS (Cross-Origin Resource Sharing)
 const jwt = require("jsonwebtoken"); // Library for creating and verifying JSON Web Tokens (JWT)
