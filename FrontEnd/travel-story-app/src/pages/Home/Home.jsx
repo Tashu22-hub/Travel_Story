@@ -14,6 +14,10 @@ import 'react-day-picker/dist/style.css';
 import EmptyImg from '../../assets/images/add-story.png';
 import FilterInfoTitle from '../../components/Cards/FilterInfoTitle';
 import { getEmptyCardMessage } from '../../utils/helper';
+// import { BsSendFill } from "react-icons/bs";
+// import { toast } from "react-toastify";
+
+
 
 const Home = () => {
     const navigate = useNavigate();
@@ -25,6 +29,9 @@ const Home = () => {
     const [filterType, setFilterType] = useState('');
     const [dateRange, setDateRange] = useState({ from: null, to: null });
 
+    
+
+    
     const [openAddEditModal, setOpenAddEditModal] = useState({
         isShown: false,
         type: "add",
@@ -190,6 +197,9 @@ const Home = () => {
         getUserInfo();
         getAllTravelStories();
     }, []);
+    useEffect(() => {
+  toast.success("✅ loaded");
+}, []);
 
     if (loading) {
         return <div className="flex items-center justify-center h-screen">Loading...</div>;
@@ -212,10 +222,10 @@ const Home = () => {
                     onClear={resetFilter}
                 />
 
-                <div className="flex gap-7">
+                <div className="flex gap-7 ">
                     <div className="flex-1">
                         {filteredStories.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                                 {filteredStories.map((item) => (
                                     <TravelStoryCard
                                         key={item._id}
@@ -304,7 +314,9 @@ const Home = () => {
                 <MdAdd className="text-3xl text-white" />
             </button>
 
-            <ToastContainer />
+           
+           
+            
         </>
     );
 };

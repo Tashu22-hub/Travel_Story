@@ -1,99 +1,80 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Add this import to use navigate
 import PasswordInput from "../../components/Input/PasswordInput";
-import { validateEmail } from "../../utils/helper";
+import { validateEmail } from "../../utils/helper"; // checking validEmail in input box
 import axiosInstance from "../../utils/axiosInstance";
+import logimg from "../../assets/nature3.png";
 
 const Login = () => {
+  const navigate = useNavigate(); // Initialize the navigate function
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (!validateEmail(email)) {
-      setError("Please enter a valid email");
-      return;
+      setError("Please enter a valid email address");
     }
-
     if (!password) {
-      setError("Please enter a password");
+      setError("Please enter a required password");
       return;
     }
 
     setError("");
-    setLoading(true);
-
-    // Login API Call
+    //login API Call-install npm i axios
     try {
-      const response = await axiosInstance.post("/login", {
-        email: email,
-        password: password,
-      });
-      // Handle success login response
+      const response = await axiosInstance.post("/login", { email, password });
+
+      //handle successful login response
       if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
         navigate("/dashboard");
       }
     } catch (error) {
-      // Handle error
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      //handle login error
+      if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else {
-        setError("Something went wrong. Please try again later.");
+        setError("An unexpected error occurred. Please try again");
       }
-    } finally {
-      setLoading(false);
     }
   };
-
   return (
     <div className="h-screen bg-cyan-50 overflow-hidden relative">
-      <div className="login-ui-box right-10 -top-40" />
-      <div className="login-ui-box" />
-      <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2" />
-      <div className="container h-screen flex justify-center items-center px-20 mx-auto">
-        {/* Left Side: Background Image and Text */}
-        <div className="w-2/4 h-[90vh] flex items-end bg-login-bg-img bg-cover bg-center rounded-lg shadow-lg p-10 z-50 relative">
-          <div className="absolute top-10 left-10 text-white">
-            <h4 className="text-4xl font-bold mb-4">
-              Capture Your <br />
-              Journeys
+      <div className="login-ui-box right-10 -top-40"></div>
+      <div className="login-ui-box bg-cyan-200 -bottom-40 right-1/2"></div>
+      <div className="container h-screen flex items-center justify-center px-20 mx-auto ">
+        <div className="w-2/4 h-[90vh] relative bg-cover bg-center rounded-lg p-10 z-50">
+          <img
+            src={logimg}
+            alt="Nature"
+            className="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-0"
+          />
+
+          <div className="relative z-10 flex flex-col justify-end h-full">
+            <h4 className="text-white text-5xl font-semibold leading-[58px]">
+              Capture Your <br /> Journeys
             </h4>
-            <p className="text-[15px] text-white leading-6 pr-6 mt-4">
-              <br />
-              Record your travel experiences and memories in your personal
-              travel journal. Share your travel stories with the world.
+            <p className="text-white text-[16px] leading-6 pr-7 mt-4">
+              Record your travel experience and memories in your personal travel
+              journal
             </p>
           </div>
         </div>
 
-        {/* Right Side: Login Form */}
-        <div className="w-2/4 p-10 bg-white rounded-lg shadow-lg z-50">
+        <div className="w-2/4 h-[75vh] bg-white rounded-r-lg relative p-16 shadow-lg shadow-cyan-200/2 ">
           <form onSubmit={handleLogin}>
             <h4 className="text-2xl font-semibold mb-7">Login</h4>
-
-            <label htmlFor="email" className="sr-only">
-              Email
-            </label>
             <input
-              id="email"
-              type="email"
+              type="text"
               placeholder="Email"
+              className="input-box mb-4 w-full p-3 border border-gray-300 rounded-lg outline-none"
               value={email}
               onChange={({ target }) => {
                 setEmail(target.value);
               }}
-              className="w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
-            <br />
             <PasswordInput
               value={password}
               onChange={({ target }) => {
@@ -101,17 +82,25 @@ const Login = () => {
               }}
             />
             {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
-            <br />
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </button>
-
-            <p className="text sm text-gray-500 text-center my-4">Or</p>
+            {/* <input
+              type="password"
+              placeholder="Password"
+              className="input-box mb-4 w-full p-3 border border-gray-300 rounded-md"
+            /> */}
 
             <button
+              type="submit"
+              className="btn-primary w-full p-3 bg-blue-400 text-white rounded-full hover:text-black hover:shadow-lg transition-all duration-300 shadow-blue-600"
+            >
+              LOGIN
+            </button>
+            <p className="text-center my-4">Or</p>
+            <button
               type="button"
-              className="btn-light btn-primary"
-              onClick={() => navigate("/signup")}
+              className="w-full p-3 bg-green-500 text-white rounded-full hover:text-black hover: shadow-lg  shadow-green-400"
+              onClick={() => {
+                navigate("/signup");
+              }}
             >
               CREATE ACCOUNT
             </button>
@@ -119,7 +108,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

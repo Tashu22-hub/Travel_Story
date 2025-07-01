@@ -25,6 +25,7 @@ app.use(cors({ origin: "*" })); // Enable CORS for all origins
 
 // Route to create a new user account
 app.post("/create-account", async (req, res) => {
+   console.log("REQ BODY:", req.body); // ✅ Debug incoming data
   try {
     const { fullName, email, password } = req.body; // Extract user details from the request body
 
@@ -66,11 +67,10 @@ app.post("/create-account", async (req, res) => {
       accessToken,
       message: "Account created successfully",
     });
-  } catch (err) {
-    // Handle any errors that occur during account creation
-    console.error("Error during account creation:", err.message);
-    return res.status(500).json({ error: true, message: "Internal Server Error" });
-  }
+  }  catch (err) {
+  console.error("Error during account creation:", err); // <-- FULL error
+  return res.status(500).json({ error: true, message: "Internal Server Error" });
+}
 });
 
 // Route to handle user login

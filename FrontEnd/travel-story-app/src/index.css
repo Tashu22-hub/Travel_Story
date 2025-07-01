@@ -21,8 +21,9 @@
   }
 
   body {
-    background-color: #fdfeff;
+    background-color:#192c3f;
     overflow-x: hidden;
+    /* text-color:#ffffff; */
   }
 }
 /* Custom scrollbar Styles */
@@ -100,3 +101,7 @@
 .bg-current {
   background-color: #05b6d3;
 }
+.Toastify__toast-container {
+  z-index: 9999;
+}
+
