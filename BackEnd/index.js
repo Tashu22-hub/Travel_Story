@@ -21,7 +21,23 @@ mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTop
 // Initialize the Express application
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
-app.use(cors({ origin: "*" })); // Enable CORS for all origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://travel-frontend-lilac.vercel.app",
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+})); // Enable CORS for all origins
 
 // Route to create a new user account
 app.post("/create-account", async (req, res) => {
@@ -145,7 +161,7 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: true, message: "No file uploaded" });
     } 
     const image = req.file;
-    const imageUrl = `http://localhost:3000/uploads/${image.filename}`;
+    const imageUrl = `https://travel-backend-65o3.onrender.com/uploads/${image.filename}`;
 
     res.status(201).json({ imageUrl, message: "Image uploaded successfully" });
   } catch (error) {
@@ -243,7 +259,7 @@ app.put("/edit-travel-story/:id", authenticateToken, async (req, res) => {
     if (!travelStory) {
       return res.status(404).json({ error: true, message: "Travel story not found" });
     }
-    const placeholderImageUrl = "http://localhost:3000/assets/logo.png";
+    const placeholderImageUrl = "https://travel-backend-65o3.onrender.com/assets/logo.png";
 
     travelStory.title = title;
     travelStory.story = story;

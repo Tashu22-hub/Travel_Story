@@ -90,7 +90,8 @@ MongoDB for database management.
 Check out the project on GitHub (link to your repository) and let me know your thoughts! 💬
 
 #MERNStack #React #Vite #TailwindCSS #JWT #WebDevelopment #TravelStories #Coding #FullStackDevelopment #VS Code #Postman
-
+backend start command - npm start(5000)
+frontend start command - npm run dev (5173)
 
 ## website Features :
 ![Register Screen](./ss/reg.png)
