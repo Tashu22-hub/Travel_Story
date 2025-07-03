@@ -12,7 +12,7 @@ const TravelStoryCard = ({
   isFavorite,
   onFavoriteClick,
   onClick,
-}) => {
+}) => { 
   return (
     <div className="mt-5 shadow-md rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 transition-all ease-in-out relative cursor-pointer">
       <img
