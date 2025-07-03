@@ -16,7 +16,7 @@ const AddEditTravelStory = ({
   getAllTravelStories,
 }) => {
   const [title, setTitle] = useState(storyInfo?.title || "");
-  const [storyImg, setStoryImg] = useState(storyInfo?.ImageUrl || null);
+  const [storyImg, setStoryImg] = useState(storyInfo?.ImageUrl || null); 
   const [story, setStory] = useState(storyInfo?.story || "");
   const [visitedLocations, setVisitedLocations] = useState(
     storyInfo?.visitedLocations || []
