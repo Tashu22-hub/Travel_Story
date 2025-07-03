@@ -1,7 +1,7 @@
 export const validateEmail = (email) => {
     const Regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return Regex.test(email);
-};  // A function to validate an email address using a regular expression.
+};  // A function to validate an email address using a regular expression. 
 
 export const getInitials = (name) => {
     if (!name) return "";
