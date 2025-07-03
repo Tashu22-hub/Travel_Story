@@ -10,7 +10,7 @@ const FilterInfoTitle = ({ filterType, filterDates, onClear }) => {
       : "N/A";
     const endDate = date?.to ? moment(date.to).format("DD MMM YYYY") : "N/A";
     return (
-      <div className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-md">
+      <div className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-md"> 
         <p className="text-xs font-medium">
           {startDate} - {endDate}
         </p>
