@@ -8,7 +8,7 @@ function authenticateToken(req, res, next) {
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(401);
-        req.user = user; // Ensure the payload is assigned to req.user
+        req.user = user; // Ensure the payload is assigned to req.user 
         next();
     });
 }
