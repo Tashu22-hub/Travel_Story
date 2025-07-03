@@ -5,7 +5,7 @@ import "react-day-picker/style.css";
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <StrictMode> 
     <App />
   </StrictMode>,
 )
