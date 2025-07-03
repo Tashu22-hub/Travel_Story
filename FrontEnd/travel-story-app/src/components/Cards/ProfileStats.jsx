@@ -7,7 +7,7 @@ const ProfileStats = () => {
   const userInfo = location.state?.userInfo; // Get user data passed from navigation
 
   if (!userInfo) {
-    navigate("/dashboard"); // Redirect to dashboard if no user data is available
+    navigate("/dashboard"); // Redirect to dashboard if no user data is available 
     return null;
   }
 
