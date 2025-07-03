@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use(// Add an interceptor to attach the autho
     (config) => {
         const accessToken= localStorage.getItem("token");  // Get the token from local storage.
         if (accessToken) {
-            config.headers.Authorization = `Bearer ${accessToken}`;  // Set the authorization header with the token.
+            config.headers.Authorization = `Bearer ${accessToken}`;  // Set the authorization header with the token. 
         }
         return config;
     },
