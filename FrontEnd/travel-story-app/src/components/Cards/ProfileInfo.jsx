@@ -14,7 +14,7 @@ const ProfileInfo = ({ userInfo, onLogout }) => {
       <div className="flex items-center gap-3">
         <div
           className="w-12 h-12 flex items-center justify-center rounded-full text-slate-950 font-medium bg-gray-100 cursor-pointer"
-          onClick={handleProfileClick} // Navigate when clicking the profile avatar
+          onClick={handleProfileClick} // Navigate when clicking the profile avatar 
         >
           {getInitials(userInfo.fullName || "")}
         </div>
